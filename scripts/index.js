@@ -5,9 +5,7 @@ import {
   http,
   HttpRequestMethod,
 } from "@minecraft/server-net";
-const channelID = "1165896932372250634";
-const botToken =
-  "MTMxODgwMDA0Nzk2MTI3NjQyNg.GPxosH.iwg7ZBwnOO8Hkc8fjGPMdh8Ji4NoGQCuOC_yN8";
+import { channelID, botToken } from "./env.js"
 
 async function sendDiscordMessage(content) {
   const req = new HttpRequest(
