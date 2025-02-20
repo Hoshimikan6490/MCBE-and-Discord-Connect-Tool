@@ -5,7 +5,7 @@
 
 ## 謝辞
 本アドオンは、[Naque / ナク (@naque79)](https://youtube.com/@naque79)さんが公開された以下の動画「 [【マインクラフト統合版】統合版のサーバーとDiscordのチャットを連携する方法を解説！](https://youtu.be/VXPT7evGisc)」で配布されているアドオンを最終編集時点の最新バージョンの統合版サーバーとDiscordサーバー間で通信できるように修正した物です。本コードに関するお問い合わせは、[本リポジトリのissue](https://github.com/Hoshimikan6490/MCBE-and-Discord-Connect-Tool/issues)や[Hoshimikan6490のお問い合わせフォーム](https://forms.gle/E5Pt7YRJfVcz4ZRJ6)からどうぞ。元動作のコメント欄へこのリポジトリの内容に関するお問い合わせをする行為はご遠慮ください。
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/VXPT7evGisc?si=CoK17iiHYZSUWz-y&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![本コードの元となったアドオンの動画](http://img.youtube.com/vi/VXPT7evGisc/0.jpg)]([https://www.youtube.com/watch?v={video-id}](https://youtu.be/VXPT7evGisc))
 
 ## 変更履歴
 [release note](https://github.com/Hoshimikan6490/MCBE-and-Discord-Connect-Tool/releases)をご覧ください。
