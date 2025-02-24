@@ -10,20 +10,7 @@ import { channelID, botToken } from "./env.js";
 // ============================
 // Discord メッセージ送信関数
 // ============================
-async function sendDiscordMessage(content) {
-  const req = new HttpRequest(
-    `https://discord.com/api/v10/channels/${channelID}/messages`
-  );
-  req.method = HttpRequestMethod.Post;
-  req.body = JSON.stringify({ content });
-  req.headers = [
-    new HttpHeader("Content-Type", "application/json"),
-    new HttpHeader("Authorization", `Bot ${botToken}`),
-  ];
-  await http.request(req);
-}
-
-async function sendDiscordEmbed(message) {
+async function sendDiscordMessage(message) {
   const req = new HttpRequest(
     `https://discord.com/api/v10/channels/${channelID}/messages`
   );
@@ -50,14 +37,15 @@ world.afterEvents.worldInitialize.subscribe(async () => {
     content: "",
     embeds: [embedData],
   };
-  sendDiscordEmbed(message);
+  sendDiscordMessage(message);
 });
 
 world.afterEvents.chatSend.subscribe(async (eventData) => {
   let player = eventData.sender.name;
-  let message = eventData.message;
-  let dMessage = `<${player}> ${message}`;
-  sendDiscordMessage(dMessage);
+  const message = {
+    content: `<${player}> ${eventData.message}`,
+  };
+  sendDiscordMessage(message);
 });
 
 world.afterEvents.playerJoin.subscribe(async (eventData) => {
@@ -72,7 +60,7 @@ world.afterEvents.playerJoin.subscribe(async (eventData) => {
     content: "",
     embeds: [embedData],
   };
-  sendDiscordEmbed(message);
+  sendDiscordMessage(message);
 });
 
 world.afterEvents.playerLeave.subscribe(async (eventData) => {
@@ -87,7 +75,7 @@ world.afterEvents.playerLeave.subscribe(async (eventData) => {
     content: "",
     embeds: [embedData],
   };
-  sendDiscordEmbed(message);
+  sendDiscordMessage(message);
 });
 
 // ============================
