@@ -7,6 +7,9 @@ import {
 } from "@minecraft/server-net";
 import { channelID, botToken } from "./env.js";
 
+// ============================
+// Discord メッセージ送信関数
+// ============================
 async function sendDiscordMessage(content) {
   const req = new HttpRequest(
     `https://discord.com/api/v10/channels/${channelID}/messages`
@@ -33,6 +36,9 @@ async function sendDiscordEmbed(message) {
   await http.request(req);
 }
 
+// ============================
+// Minecraft イベント連携
+// ============================
 world.afterEvents.worldInitialize.subscribe(async () => {
   let title = `**サーバー起動**`;
   const embedData = {
@@ -84,6 +90,9 @@ world.afterEvents.playerLeave.subscribe(async (eventData) => {
   sendDiscordEmbed(message);
 });
 
+// ============================
+// Discordからのメッセージ取得
+// ============================
 const messageURL = `https://discord.com/api/v10/channels/${channelID}/messages`;
 let lastMessageID = null;
 let i = 0;
