@@ -101,9 +101,32 @@ async function handleNewMessages() {
           `返信：§b[${message.referenced_message.author.username}] §f${message.referenced_message.content} >\n§b[${message.author.username}] §f${message.content}`
         );
       } else {
-        world.sendMessage(
-          `§b[${message.author.username}] §f${message.content}`
-        );
+        if (message.content.startsWith("runCommand!")) {
+          try {
+            const command = message.content.slice("runCommand!".length);
+            if (command == "list") {
+              const players = world.getAllPlayers();
+              const playerNames = players.map((p) => p.name).join(", ");
+              sendDiscordMessage({
+                content: `all player name(${playerNames.length}): ${playerNames}`,
+              });
+            } else {
+              world.getDimension("overworld").runCommand(command);
+              // 結果を返信
+              sendDiscordMessage({
+                content: `success!!`,
+              });
+            }
+          } catch (err) {
+            sendDiscordMessage({
+              content: `ERROR!!!: ${err}`,
+            });
+          }
+        } else {
+          world.sendMessage(
+            `§b[${message.author.username}] §f${message.content}`
+          );
+        }
       }
     }
   });
