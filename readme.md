@@ -90,6 +90,8 @@ export { channelID, botToken };
     },
 ```
 の部分を編集してください。
+### botがオンラインになりません。
+このアドオンのみを導入・利用している場合、discord botはオンラインにはなりません。オフライン表示のままで動作しますので、ご了承ください。
 
 ## 謝辞
 本アドオンは、[Naque / ナク (@naque79)](https://youtube.com/@naque79)さんが公開された以下の動画「 [【マインクラフト統合版】統合版のサーバーとDiscordのチャットを連携する方法を解説！](https://youtu.be/VXPT7evGisc)」で配布されているアドオンを最終編集時点の最新バージョンの統合版サーバーとDiscordサーバー間で通信できるように修正した物です。本コードに関するお問い合わせは、[本リポジトリのissue](https://github.com/Hoshimikan6490/MCBE-and-Discord-Connect-Tool/issues)や[Hoshimikan6490のお問い合わせフォーム](https://forms.gle/E5Pt7YRJfVcz4ZRJ6)からどうぞ。元動作のコメント欄へこのリポジトリの内容に関するお問い合わせをする行為はご遠慮ください。
