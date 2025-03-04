@@ -37,7 +37,10 @@ function errorNotification(client, interaction, e) {
     ]);
   client.channels.cache
     .get(consoleChannel)
-    ?.send({ content: `<@${adminUserID}>`, embeds: [embed] })
+    ?.send({
+      content: `${adminUserID.map((userID) => `<@${userID}>`).join(" ")}`,
+      embeds: [embed],
+    })
     .catch((err) => {});
 
   return;
