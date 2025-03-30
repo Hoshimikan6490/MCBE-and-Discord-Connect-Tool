@@ -26,7 +26,7 @@ async function sendDiscordMessage(message) {
 // ============================
 // Minecraft イベント連携
 // ============================
-world.afterEvents.worldInitialize.subscribe(async () => {
+world.afterEvents.worldLoad.subscribe(async () => {
   let title = `**サーバー起動**`;
   const embedData = {
     title: title,
@@ -98,7 +98,7 @@ async function handleNewMessages() {
     if (!message.author.bot && i !== 0) {
       if (message.referenced_message) {
         world.sendMessage(
-          `返信：§b[${message.referenced_message.author.username}] §f${message.referenced_message.content} >\n§b[${message.author.username}] §f${message.content}`
+          `返信：§b[${message.referenced_message.author.global_name}] §f${message.referenced_message.content} >\n§b[${message.author.global_name}] §f${message.content}`
         );
       } else {
         if (message.content.startsWith("runCommand!")) {
@@ -107,24 +107,25 @@ async function handleNewMessages() {
             if (command == "list") {
               const players = world.getAllPlayers();
               const playerNames = players.map((p) => p.name).join(", ");
+              console.log(playerNames);
               sendDiscordMessage({
-                content: `all player name(${playerNames.length}): ${playerNames}`,
+                content: `計${players.length}人のプレイヤーが接続中！: ${playerNames}`,
               });
             } else {
               world.getDimension("overworld").runCommand(command);
-              // 結果を返信
+              // 結果をワールドに送信
               sendDiscordMessage({
                 content: `success!!`,
               });
             }
           } catch (err) {
             sendDiscordMessage({
-              content: `ERROR!!!: ${err}`,
+              content: `コマンド送信時に以下のエラーが発生しました！\n\`\`\`\n${err}\n\`\`\``,
             });
           }
         } else {
           world.sendMessage(
-            `§b[${message.author.username}] §f${message.content}`
+            `§b[${message.author.global_name}] §f${message.content}`
           );
         }
       }
