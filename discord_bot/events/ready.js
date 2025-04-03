@@ -1,5 +1,13 @@
-const { REST, Routes, ActivityType } = require("discord.js");
+const {
+  REST,
+  Routes,
+  ActivityType,
+  PresenceUpdateStatus,
+} = require("discord.js");
+const mcpePing = require("mcpe-ping");
 const discord_token = process.env.discord_token;
+const IPaddress = process.env.mcIPaddress;
+const port = process.env.mcPort || 19132;
 
 module.exports = async (client) => {
   //discord botへのコマンドの設定
@@ -21,9 +29,21 @@ module.exports = async (client) => {
 
   //カスタマイズアクティビティを設定
   setInterval(() => {
-    client.user.setActivity({
-      name: `所属サーバー数は${client.guilds.cache.size}`,
-      type: ActivityType.Listening,
+    mcpePing(IPaddress, port, (err, res) => {
+      if (err) {
+        client.user.setActivity({
+          name: "サーバーがオフラインです",
+          type: ActivityType.Competing,
+        });
+        client.user.setStatus(PresenceUpdateStatus.DoNotDisturb);
+        return;
+      }
+
+      client.user.setActivity({
+        name: `「${res.cleanName}」はオンラインです。`,
+        type: ActivityType.Competing,
+      });
+      client.user.setStatus(PresenceUpdateStatus.Online);
     });
   }, 10000);
 };
