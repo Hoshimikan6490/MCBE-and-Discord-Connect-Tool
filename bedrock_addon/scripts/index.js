@@ -27,7 +27,7 @@ async function sendDiscordMessage(message) {
 // Minecraft イベント連携
 // ============================
 world.afterEvents.worldLoad.subscribe(async () => {
-  let title = `**サーバー起動**`;
+  let title = `**✅｜サーバー起動**`;
   const embedData = {
     title: title,
     color: 7186930,
@@ -50,7 +50,7 @@ world.afterEvents.chatSend.subscribe(async (eventData) => {
 
 world.afterEvents.playerJoin.subscribe(async (eventData) => {
   let player = eventData.playerName;
-  let title = `**${player}がサーバーに参加しました**`;
+  let title = `**🏠｜${player}がサーバーに参加しました**`;
   const embedData = {
     title: title,
     color: 8438594,
@@ -65,7 +65,7 @@ world.afterEvents.playerJoin.subscribe(async (eventData) => {
 
 world.afterEvents.playerLeave.subscribe(async (eventData) => {
   let player = eventData.playerName;
-  let title = `**${player}がサーバーから退出しました**`;
+  let title = `**👋｜${player}がサーバーから退出しました**`;
   const embedData = {
     title: title,
     color: 13182255,
@@ -97,8 +97,13 @@ async function handleNewMessages() {
   messages.forEach((message) => {
     if (!message.author.bot && i !== 0) {
       if (message.referenced_message) {
+        let messageAuthor = message.referenced_message.author;
         world.sendMessage(
-          `返信：§b[${message.referenced_message.author.global_name}] §f${message.referenced_message.content} >\n§b[${message.author.global_name}] §f${message.content}`
+          `§l|⁻⁻§r§b[${
+            messageAuthor.global_name || messageAuthor.username
+          }] §f${message.referenced_message.content}\n§b[${
+            messageAuthor.global_name || messageAuthor.username
+          }] §f${message.content}`
         );
       } else {
         if (message.content.startsWith("runCommand!")) {
@@ -125,7 +130,9 @@ async function handleNewMessages() {
           }
         } else {
           world.sendMessage(
-            `§b[${message.author.global_name}] §f${message.content}`
+            `§b[${message.author.global_name || message.author.username}] §f${
+              message.content
+            }`
           );
         }
       }
