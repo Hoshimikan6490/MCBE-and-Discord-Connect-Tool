@@ -40,7 +40,7 @@ module.exports = async (client) => {
       }
 
       client.user.setActivity({
-        name: `「${res.cleanName}」はオンラインです。`,
+        name: `${res.currentPlayers}/${res.maxPlayers}人がオンラインです。`,
         type: ActivityType.Competing,
       });
       client.user.setStatus(PresenceUpdateStatus.Online);
