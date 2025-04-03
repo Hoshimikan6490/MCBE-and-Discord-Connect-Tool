@@ -35,7 +35,7 @@ module.exports = async (client) => {
           name: "サーバーがオフラインです",
           type: ActivityType.Competing,
         });
-        client.user.setStatus(PresenceUpdateStatus.DoNotDisturb);
+        client.user.setStatus(PresenceUpdateStatus.Idle);
         return;
       }
 
