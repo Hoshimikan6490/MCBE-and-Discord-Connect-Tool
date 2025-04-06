@@ -78,6 +78,39 @@ world.afterEvents.playerLeave.subscribe(async (eventData) => {
   sendDiscordMessage(message);
 });
 
+world.afterEvents.playerEmote.subscribe(async (eventData) => {
+  let player = eventData.player.nameTag;
+  let emote = eventData.personaPieceId;
+  let title = `**💃｜${player}が${emote}を使いました**`; //TODO: エモート名を表示
+  const embedData = {
+    title: title,
+    color: 0x00ff00, // 緑色
+    timestamp: new Date().toISOString(),
+  };
+  const message = {
+    content: "",
+    embeds: [embedData],
+  };
+  sendDiscordMessage(message);
+});
+
+world.afterEvents.entityDie.subscribe(async (eventData) => {
+  if (eventData.deadEntity.typeId == "minecraft:player") {
+    let player = eventData.deadEntity.nameTag;
+    let title = `**💀｜${player}が死亡しました**`; //TODO: 死亡理由
+    const embedData = {
+      title: title,
+      color: 0x800080, // 紫色
+      timestamp: new Date().toISOString(),
+    };
+    const message = {
+      content: "",
+      embeds: [embedData],
+    };
+    sendDiscordMessage(message);
+  }
+});
+
 // ============================
 // Discordからのメッセージ取得
 // ============================
