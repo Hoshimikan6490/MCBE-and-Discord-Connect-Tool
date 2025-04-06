@@ -44,7 +44,7 @@ module.exports = async (client) => {
         if (oldStatus) {
           let embed = new EmbedBuilder()
             .setTitle("**⛔　サーバーシャットダウン**")
-            .setColor(0x6dbf44)
+            .setColor(0xff0000)
             .setTimestamp();
           client.channels.cache.get(downNotifyChannelId).send({
             embeds: [embed],
