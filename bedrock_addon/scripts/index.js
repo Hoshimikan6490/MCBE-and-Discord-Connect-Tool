@@ -30,7 +30,7 @@ world.afterEvents.worldLoad.subscribe(async () => {
   let title = `**✅｜サーバー起動**`;
   const embedData = {
     title: title,
-    color: 7186930,
+    color: 0x0000ff,
     timestamp: new Date().toISOString(),
   };
   const message = {
@@ -50,10 +50,10 @@ world.afterEvents.chatSend.subscribe(async (eventData) => {
 
 world.afterEvents.playerJoin.subscribe(async (eventData) => {
   let player = eventData.playerName;
-  let title = `**🏠｜${player}がサーバーに参加しました**`;
+  let title = `**🚪｜${player}がサーバーに参加しました**`;
   const embedData = {
     title: title,
-    color: 8438594,
+    color: 0x87ceeb, // 空色
     timestamp: new Date().toISOString(),
   };
   const message = {
@@ -68,7 +68,7 @@ world.afterEvents.playerLeave.subscribe(async (eventData) => {
   let title = `**👋｜${player}がサーバーから退出しました**`;
   const embedData = {
     title: title,
-    color: 13182255,
+    color: 0xffa500, // オレンジ色
     timestamp: new Date().toISOString(),
   };
   const message = {
