@@ -47,6 +47,9 @@ export { channelID, botToken };
 　┣━ world_icon.jpeg
 　┗━ world_resource_packs.json
 ```
+> [!TIP]
+> ここでワールドデータを生成せずに統合版サーバーをセットアップする場合は、各種設定をした後にbedrock_server.exeを初回起動した後に生成されたワールドデータの中の「level.dat」を「NBT STUDIO」などで「level.dat＞experiments＞gametest」を「1」になるように設定すれば良い。
+
 
 ### 統合版サーバーの準備
 15. [Minecraft公式のサーバーファイル配布ページ](https://www.minecraft.net/ja-jp/download/server/bedrock)に移動し、最新版のサーバーファイルをダウンロードする。(サーバーを立てるOSに合わせた物を選んでダウンロードしてください。プレビュー版である必要はありません。)
