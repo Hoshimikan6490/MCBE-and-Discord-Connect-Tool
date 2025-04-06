@@ -80,12 +80,18 @@ world.afterEvents.playerLeave.subscribe(async (eventData) => {
 
 world.afterEvents.playerEmote.subscribe(async (eventData) => {
   let player = eventData.player.nameTag;
-  let emote = eventData.personaPieceId;
-  let title = `**💃｜${player}が${emote}を使いました**`; //TODO: エモート名を表示
+  let playerLocation = eventData.player.location;
+  let { x, y, z } = playerLocation;
+  let title = `**💃｜${player}が (${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(
+    2
+  )}) でエモートを使いました！**`;
   const embedData = {
     title: title,
     color: 0x00ff00, // 緑色
     timestamp: new Date().toISOString(),
+    footer: {
+      text: "エモート名は表示出来ません。",
+    },
   };
   const message = {
     content: "",
