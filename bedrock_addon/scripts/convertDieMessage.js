@@ -1,19 +1,4 @@
 module.exports = async (damageSource) => {
-  // 矢で死んだ場合
-  if (damageSource.damagingProjectile.typeId == "minecraft:arrow") {
-    // 矢の発射者次第で処理を変える
-    if (damageSource.cause.typeId == "minecraft:player")
-      return "他のプレイヤーが射った矢に射抜かれた";
-    if (damageSource.cause.typeId == "minecraft:arrow")
-      return "どこかから飛んできた矢に射抜かれた";
-    if (damageSource.cause.typeId == "minecraft:skeleton")
-      return "スケルトンが射った矢に射抜かれた";
-    if (damageSource.cause.typeId == "minecraft:stray")
-      return "ストレイが射った矢に射抜かれた";
-    if (damageSource.cause.typeId == "minecraft:pillager")
-      return "ピリジャーが射った矢に射抜かれた";
-  }
-
   // サボテンで死んだ場合
   if (damageSource.cause == "minecraft:cactus")
     return "サボテンが刺さって死んだ";
@@ -26,13 +11,13 @@ module.exports = async (damageSource) => {
     return "運動エネルギーを体験した";
 
   // エンティティの爆発で死んだ場合
-  if (damageSource.cause.typeId == "minecraft:entityExplosion") {
+  if (damageSource.cause == "minecraft:entityExplosion") {
     // 爆発の発生源次第で処理を変える
-    if (damageSource.cause.exploder.typeId == "minecraft:tnt")
+    if (damageSource.damagingEntity.typeId == "minecraft:tnt")
       return "TNTの爆発に巻き込まれた";
-    if (damageSource.cause.exploder.typeId == "minecraft:creeper")
+    if (damageSource.damagingEntity.typeId == "minecraft:creeper")
       return "クリーパーの爆発に巻き込まれた";
-    if (damageSource.cause.exploder.typeId == "minecraft:ender_crystal")
+    if (damageSource.damagingEntity.typeId == "minecraft:ender_crystal")
       return "エンダークリスタルの爆発に巻き込まれた";
   }
 
@@ -81,9 +66,39 @@ module.exports = async (damageSource) => {
 
   // 飛翔物で死んだ場合
   if (damageSource.cause == "projectile") {
+    // 矢で死んだ場合
+    if (damageSource.damagingProjectile.typeId == "minecraft:arrow") {
+      // 矢の発射者次第で処理を変える
+      if (damageSource.damagingEntity.typeId == "minecraft:player")
+        return "他のプレイヤーが射った矢に射抜かれた";
+      if (damageSource.damagingEntity.typeId == "minecraft:arrow")
+        return "どこかから飛んできた矢に射抜かれた";
+      if (damageSource.damagingEntity.typeId == "minecraft:skeleton")
+        return "スケルトンが射った矢に射抜かれた";
+      if (damageSource.damagingEntity.typeId == "minecraft:stray")
+        return "ストレイが射った矢に射抜かれた";
+      if (damageSource.damagingEntity.typeId == "minecraft:pillager")
+        return "ピリジャーが射った矢に射抜かれた";
+      if (damageSource.damagingEntity.typeId == "minecraft:piglin")
+        return "ピグリンが射った矢に射抜かれた";
+      if (damageSource.damagingEntity.typeId == "minecraft:bogged")
+        return "ボグドが射った矢に射抜かれた";
+    }
+
     // トライデントで死んだ場合
     if (damageSource.damagingEntity.typeId == "minecraft:trident")
       return "トライデントに殺害された";
+    // 商人のラマに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:trader_llama")
+      return "商人のラマに丸めてポイされた";
+    // ブレイズに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:blaze")
+      return "ブレイズに火だるまにされた";
+    // シュルカーの玉で死んだ場合
+    if (damageSource.damagingEntity.typeId == "minecraft:shulker_bullet")
+      return "シュルカーに狙撃された";
+    if (damageSource.damagingEntity.typeId == "minecraft:breeze")
+      return "ブリーズに殺害された";
     return "飛翔物に殺害された";
   }
 
@@ -140,6 +155,45 @@ module.exports = async (damageSource) => {
     // ガーディアンのビームで死んだ場合
     if (damageSource.damagingEntity.typeId == "minecraft:guardian")
       return "ガーディアンに殺害された";
+    // エルダーガーディアンのビームで死んだ場合
+    if (damageSource.damagingEntity.typeId == "minecraft:elder_guardian")
+      return "エルダーガーディアンに殺害された";
+    // エンダーマイトに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:endermite")
+      return "エンダーマイトに殺害された";
+    // マグマキューブに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:magma_cube")
+      return "マグマキューブに殺害された";
+    // ホグリンに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:hoglin")
+      return "ホグリンに殺害された";
+    // ゾグリンに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:zoglin")
+      return "ゾグリンに殺害された";
+    // ピグリンブルートに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:piglin_brute")
+      return "ピグリンブルートに殺害された";
+    // ウォーデンに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:warden")
+      return "ウォーデンに殺害された";
+    // ブレイズに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:blaze")
+      return "ブレイズに殺害された";
+    // ヴィンディケーターに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:vindicator")
+      return "ヴィンディケーターに殺害された";
+    // ヴェックスに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:vex")
+      return "ヴェックスに殺害された";
+    // 村人ゾンビに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:zombie_villager_v2")
+      return "村人ゾンビに殺害された";
+    // ファントムの攻撃で死んだ場合
+    if (damageSource.damagingEntity.typeId == "minecraft:phantom")
+      return "ファントムに殺害された";
+    // アイアンゴーレムに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:iron_golem")
+      return "アイアンゴーレムに殺害された";
     // プレイヤーの攻撃で死んだ場合
     if (damageSource.damagingEntity.typeId == "minecraft:player")
       return "プレイヤーに殺害された";
@@ -153,7 +207,18 @@ module.exports = async (damageSource) => {
     // ガーディアンのトゲで死んだ場合
     if (damageSource.damagingEntity.typeId == "minecraft:guardian")
       return "ガーディアンを傷つけようとして殺害された";
+    // エルダーガーディアンのトゲで死んだ場合
+    if (damageSource.damagingEntity.typeId == "minecraft:elder_guardian")
+      return "エルダーガーディアンを傷つけようとして殺害された";
+    // 棘の鎧で死んだ場合
     if (damageSource.damagingEntity.typeId == "minecraft:player")
-      return "トゲで反撃された";
+      return "棘の鎧で反撃された";
   }
+
+  // ヤギの突進で死んだ場合
+  if (damageSource.cause == "ramAttack") return "ヤギに突進されて力尽きた";
+
+  // ウォーデンの衝撃波で死んだ場合
+  if (damageSource.cause == "sonicBoom")
+    return "ウォーデンから逃れようとして衝撃波に消し飛ばされた";
 };
