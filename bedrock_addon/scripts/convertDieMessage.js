@@ -113,8 +113,47 @@ module.exports = async (damageSource) => {
     // シルバーフィッシュに殺された場合
     if (damageSource.damagingEntity.typeId == "minecraft:silverfish")
       return "シルバーフィッシュに殺害された";
+    // ウィザースケルトンに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:wither_skeleton")
+      return "ウィザースケルトンに殺害された";
+    // スライムに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:slime")
+      return "スライムに殺害された";
+    // クモに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:spider")
+      return "クモに殺害された";
+    // ゾンビに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:zombie")
+      return "ゾンビに殺害された";
+    // ゾンビピグリンに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:zombified_piglin")
+      return "ゾンビピグリンに殺害された";
+    // ハスクに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:husk")
+      return "ハスクに殺害された";
+    // ドラウンドに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:drowned")
+      return "ドラウンドに殺害された";
+    // 洞窟グモに殺された場合
+    if (damageSource.damagingEntity.typeId == "minecraft:cave_spider")
+      return "洞窟グモに殺害された";
+    // ガーディアンのビームで死んだ場合
+    if (damageSource.damagingEntity.typeId == "minecraft:guardian")
+      return "ガーディアンに殺害された";
     // プレイヤーの攻撃で死んだ場合
     if (damageSource.damagingEntity.typeId == "minecraft:player")
       return "プレイヤーに殺害された";
+  }
+
+  // ウィザー効果で死んだ場合
+  if (damageSource.cause == "wither") return "干からびた";
+
+  // トゲで死んだ場合
+  if (damageSource.cause == "thorns") {
+    // ガーディアンのトゲで死んだ場合
+    if (damageSource.damagingEntity.typeId == "minecraft:guardian")
+      return "ガーディアンを傷つけようとして殺害された";
+    if (damageSource.damagingEntity.typeId == "minecraft:player")
+      return "トゲで反撃された";
   }
 };
