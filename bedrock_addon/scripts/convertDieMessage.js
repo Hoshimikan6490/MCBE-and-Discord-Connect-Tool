@@ -1,35 +1,30 @@
 export default async (damageSource) => {
   // サボテンで死んだ場合
-  if (damageSource.cause == "minecraft:contact")
-    return "サボテンが刺さって死んだ";
+  if (damageSource.cause == "contact") return "サボテンが刺さって死んだ";
 
   // 溺れた場合
-  if (damageSource.cause == "minecraft:drowning") return "溺れ死んだ";
+  if (damageSource.cause == "drowning") return "溺れ死んだ";
 
   // エリトラで死んだ場合
-  if (damageSource.cause == "minecraft:flyIntoWall")
-    return "運動エネルギーを体験した";
+  if (damageSource.cause == "flyIntoWall") return "運動エネルギーを体験した";
 
   // エンティティの爆発で死んだ場合
-  if (damageSource.cause == "minecraft:entityExplosion") {
+  if (damageSource.cause == "entityExplosion") {
     // 爆発の発生源次第で処理を変える
     if (damageSource.damagingEntity?.typeId == "minecraft:tnt")
-      return "TNTの爆発に巻き込まれた";
+      return "TNT火薬のブロックに爆破された";
     if (damageSource.damagingEntity?.typeId == "minecraft:creeper")
-      return "クリーパーの爆発に巻き込まれた";
-    if (damageSource.damagingEntity?.typeId == "minecraft:ender_crystal")
-      return "エンダークリスタルの爆発に巻き込まれた";
+      return "クリーパーに爆発された";
   }
 
   // ブロックの爆発で死んだ場合
   // エンドクリスタルの爆発や、ネザーでベットで寝た場合等
-  if (damageSource.cause?.typeId == "minecraft:blockExplosion") {
-    return "爆発に巻き込まれた";
+  if (damageSource.cause == "blockExplosion") {
+    return "[意図的なゲーム デザイン]に倒された";
   }
 
   // 落下ダメージで死んだ場合
-  if (damageSource.cause == "fall")
-    return "落下ダメージ(エンダーパールによるダメージも含む)で力尽きた";
+  if (damageSource.cause == "fall") return "高い所から落ちた";
 
   // 金床の落下で死んだ場合
   if (damageSource.cause == "anvil") return "落下してきた金床に押しつぶされた";
@@ -63,11 +58,11 @@ export default async (damageSource) => {
     // エヴォーカーの魔法で死んだ場合
     if (damageSource.damagingEntity?.typeId == "minecraft:evocation_illager")
       return "エヴォーカーの魔法で殺された";
-    // プレイヤーの魔法で死んだ場合
+    // プレイヤーの魔法(魔法の矢など)で死んだ場合
     if (damageSource.damagingEntity?.typeId == "minecraft:player")
       return "プレイヤーの魔法で殺された";
     // それ以外の魔法で死んだ場合
-    return "魔法で死んだ";
+    return "魔法で殺された";
   }
 
   // 飛翔物で死んだ場合
@@ -76,7 +71,7 @@ export default async (damageSource) => {
     if (damageSource.damagingProjectile?.typeId == "minecraft:arrow") {
       // 矢の発射者次第で処理を変える
       if (damageSource.damagingEntity?.typeId == "minecraft:player")
-        return "他のプレイヤーが射った矢に射抜かれた";
+        return "プレイヤーが射った矢に射抜かれた";
       if (damageSource.damagingEntity?.typeId == "minecraft:arrow")
         return "どこかから飛んできた矢に射抜かれた";
       if (damageSource.damagingEntity?.typeId == "minecraft:skeleton")
@@ -93,6 +88,9 @@ export default async (damageSource) => {
 
     // トライデントで死んだ場合
     if (damageSource.damagingEntity?.typeId == "minecraft:trident")
+      return "トライデントに殺害された";
+    // 飛んできたトライデントで死んだ場合
+    if (damageSource.damagingEntity?.typeId == "minecraft:thrown_trident")
       return "トライデントに殺害された";
     // 商人のラマに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:trader_llama")
@@ -146,7 +144,10 @@ export default async (damageSource) => {
     // ゾンビに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:zombie")
       return "ゾンビに殺害された";
-    // ゾンビピグリンに殺された場合
+    // ゾンビピッグマンに殺された場合
+    if (damageSource.damagingEntity?.typeId == "minecraft:zombie_pigman")
+      return "ゾンビピグリンに殺害された";
+    // ゾンビ化したピグリンに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:zombified_piglin")
       return "ゾンビピグリンに殺害された";
     // ハスクに殺された場合
