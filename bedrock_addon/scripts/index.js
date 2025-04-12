@@ -6,6 +6,7 @@ import {
   HttpRequestMethod,
 } from "@minecraft/server-net";
 import { channelID, botToken } from "./env.js";
+import convertDieMessage from "./convertDieMessage.js";
 
 // ============================
 // Discord メッセージ送信関数
@@ -103,7 +104,8 @@ world.afterEvents.playerEmote.subscribe(async (eventData) => {
 world.afterEvents.entityDie.subscribe(async (eventData) => {
   if (eventData.deadEntity.typeId == "minecraft:player") {
     let player = eventData.deadEntity.nameTag;
-    let title = `**💀｜${player}が死亡しました**`; //TODO: 死亡理由
+    let deadReason = await convertDieMessage(eventData.damageSource);
+    let title = `**💀｜${player}は${deadReason?deadReason:"何らかの理由で死亡しました"}**`; //TODO: 死亡理由
     const embedData = {
       title: title,
       color: 0x800080, // 紫色

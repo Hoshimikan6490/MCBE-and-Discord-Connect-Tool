@@ -1,4 +1,4 @@
-module.exports = async (damageSource) => {
+export default async (damageSource) => {
   // サボテンで死んだ場合
   if (damageSource.cause == "minecraft:cactus")
     return "サボテンが刺さって死んだ";
