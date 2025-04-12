@@ -19,6 +19,12 @@ export default async (damageSource) => {
       return "TNT火薬のブロックに爆破された";
     if (damageSource.damagingEntity?.typeId == "minecraft:creeper")
       return "クリーパーに爆発された";
+    // ウィザーの爆発で死んだ場合
+    if (damageSource.damagingEntity?.typeId == "minecraft:wither")
+      return "ウィザーに爆発された";
+    // ウィザーが飛ばしてくる爆発物で死んだ場合
+    if (damageSource.damagingEntity?.typeId == "minecraft:wither_skull")
+      return "ウィザーに爆発された";
   }
 
   // ブロックの爆発で死んだ場合
@@ -108,8 +114,14 @@ export default async (damageSource) => {
     // シュルカーの玉で死んだ場合
     if (damageSource.damagingEntity?.typeId == "minecraft:shulker")
       return "シュルカーに狙撃された";
+    // ブリーズに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:breeze")
       return "ブリーズに殺害された";
+    // ウィンドチャージの爆発で死んだ場合
+    if (
+      damageSource.damagingEntity?.typeId == "minecraft:wind_charge_projectile"
+    )
+      return "ウィンドチャージに殺害され";
     return "飛翔物に殺害された";
   }
 
@@ -199,6 +211,12 @@ export default async (damageSource) => {
     // アイアンゴーレムに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:iron_golem")
       return "アイアンゴーレムに殺害された";
+    // エンダードラゴンに殺された場合
+    if (damageSource.damagingEntity?.typeId == "minecraft:ender_dragon")
+      return "エンダードラゴンに殺害された";
+    // ウィザーに殺された場合
+    if (damageSource.damagingEntity?.typeId == "minecraft:wither")
+      return "ウィザーに殺害された";
     // プレイヤーの攻撃で死んだ場合
     if (damageSource.damagingEntity?.typeId == "minecraft:player")
       return "プレイヤーに殺害された";
@@ -226,4 +244,14 @@ export default async (damageSource) => {
   // ウォーデンの衝撃波で死んだ場合
   if (damageSource.cause == "sonicBoom")
     return "ウォーデンから逃れようとして衝撃波に消し飛ばされた";
+
+  // 壁の中で窒息死した時
+  if (damageSource.cause == "suffocation") return "壁の中で窒息した";
+
+  // 鍾乳石で死んだ場合
+  // 足元
+  if (damageSource.cause == "stalagmite") return "鍾乳石に突き刺さった";
+  // 上から落ちてきた
+  if (damageSource.cause == "stalactite")
+    return "落ちてきた鍾乳石に串刺しにされた";
 };
