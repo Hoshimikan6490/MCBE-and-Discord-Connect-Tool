@@ -1,6 +1,6 @@
 export default async (damageSource) => {
   // サボテンで死んだ場合
-  if (damageSource.cause == "minecraft:cactus")
+  if (damageSource.cause == "minecraft:contact")
     return "サボテンが刺さって死んだ";
 
   // 溺れた場合
@@ -48,6 +48,9 @@ export default async (damageSource) => {
 
   // マグマブロックで死んだ場合
   if (damageSource.cause == "magma") return "足元が溶岩だと気づいた";
+
+  // 粉雪で死んだ場合
+  if (damageSource.cause == "freezing") return "凍え死んだ";
 
   // エフェクトで死んだ場合
   if (damageSource.cause == "magic") {
