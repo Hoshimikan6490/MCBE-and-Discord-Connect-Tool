@@ -1,6 +1,10 @@
 export default async (damageSource) => {
   // サボテンで死んだ場合
-  if (damageSource.cause == "contact") return "サボテンが刺さって死んだ";
+  if (damageSource.cause == "contact") {
+    if (damageSource.damagingEntity?.typeId == "minecraft:pufferfish")
+      return "フグに殺害された";
+    return "サボテンが刺さって死んだ";
+  }
 
   // 溺れた場合
   if (damageSource.cause == "drowning") return "溺れ死んだ";
@@ -92,6 +96,9 @@ export default async (damageSource) => {
     // 飛んできたトライデントで死んだ場合
     if (damageSource.damagingEntity?.typeId == "minecraft:thrown_trident")
       return "トライデントに殺害された";
+    // ラマに殺された場合
+    if (damageSource.damagingEntity?.typeId == "minecraft:llama")
+      return "ラマに丸めてポイされた";
     // 商人のラマに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:trader_llama")
       return "商人のラマに丸めてポイされた";
@@ -99,7 +106,7 @@ export default async (damageSource) => {
     if (damageSource.damagingEntity?.typeId == "minecraft:blaze")
       return "ブレイズに火だるまにされた";
     // シュルカーの玉で死んだ場合
-    if (damageSource.damagingEntity?.typeId == "minecraft:shulker_bullet")
+    if (damageSource.damagingEntity?.typeId == "minecraft:shulker")
       return "シュルカーに狙撃された";
     if (damageSource.damagingEntity?.typeId == "minecraft:breeze")
       return "ブリーズに殺害された";
@@ -114,15 +121,9 @@ export default async (damageSource) => {
     // オオカミの攻撃で死んだ場合
     if (damageSource.damagingEntity?.typeId == "minecraft:wolf")
       return "オオカミに殺害された";
-    // ホッキョクグマに殺された場合
+    // シロクマに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:polar_bear")
-      return "ホッキョクグマに殺害された";
-    // ラマに殺害された場合
-    if (damageSource.damagingEntity?.typeId == "minecraft:llama")
-      return "ラマに丸めてポイされた";
-    // フグに殺害された場合
-    if (damageSource.damagingEntity?.typeId == "minecraft:pufferfish")
-      return "フグに殺害された";
+      return "シロクマに殺害された";
     // パンダに殺害された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:panda")
       return "パンダに殺害された";
@@ -146,9 +147,6 @@ export default async (damageSource) => {
       return "ゾンビに殺害された";
     // ゾンビピッグマンに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:zombie_pigman")
-      return "ゾンビピグリンに殺害された";
-    // ゾンビ化したピグリンに殺された場合
-    if (damageSource.damagingEntity?.typeId == "minecraft:zombified_piglin")
       return "ゾンビピグリンに殺害された";
     // ハスクに殺された場合
     if (damageSource.damagingEntity?.typeId == "minecraft:husk")
