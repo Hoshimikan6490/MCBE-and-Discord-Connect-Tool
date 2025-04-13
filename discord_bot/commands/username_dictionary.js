@@ -13,13 +13,13 @@ module.exports = {
         )
         .addStringOption((option) =>
           option
-            .setName("mcUserId")
+            .setName("mc_user_id")
             .setDescription("統合版マインクラフトのユーザー名")
             .setRequired(true)
         )
         .addUserOption((option) =>
           option
-            .setName("discordUser")
+            .setName("discord_user")
             .setDescription("Discordのユーザー")
             .setRequired(true)
         )
@@ -32,7 +32,7 @@ module.exports = {
         )
         .addUserOption((option) =>
           option
-            .setName("discordUser")
+            .setName("discord_user")
             .setDescription("Discordのユーザー")
             .setRequired(false)
         )
@@ -45,7 +45,7 @@ module.exports = {
         )
         .addUserOption((option) =>
           option
-            .setName("discordUser")
+            .setName("discord_user")
             .setDescription("Discordのユーザー")
             .setRequired(true)
         )
@@ -54,8 +54,8 @@ module.exports = {
   run: async (client, interaction) => {
     try {
       let subcommand = interaction.options.getSubcommand();
-      let mcUserId = interaction.options.getString("mcUserId");
-      let discordUser = interaction.options.getUser("discordUser");
+      let mcUserId = interaction.options.getString("mc_user_id");
+      let discordUser = interaction.options.getUser("discord_user");
 
       // discordのユーザー選択でBOTを選んだ場合
       if (discordUser.bot)
