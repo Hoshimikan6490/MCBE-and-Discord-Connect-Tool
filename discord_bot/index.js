@@ -61,6 +61,26 @@ if (discord_token) {
 app.get("/", (request, response) => {
   response?.sendStatus(200);
 });
+
+// userName取得API
+app.get("/mcUsernameToDiscordUsername", (request, response) => {
+  let mcUserId = request.query.mcUserId;
+  if (!mcUserId)
+    return response.status(403).send("query parameter is required.");
+
+  let db = fs.readFileSync("./mcIDtoDiscordUserName.json");
+  db = JSON.parse(db);
+
+  let parsedDB = {};
+
+  // dbの内容を統合版マインクラフトのユーザー名とdiscordのユーザー名が対応するようにフォーマット
+  Object.keys(db).forEach((key) => {
+    parsedDB[db[key].mcUserId] = db[key].discordUserName;
+  });
+
+  return response?.send(parsedDB[mcUserId]);
+});
+
 app.listen(PORT, function () {
   console.log(`[NodeJS] Application Listening on Port ${PORT}`);
 });
