@@ -5,7 +5,7 @@ import {
   http,
   HttpRequestMethod,
 } from "@minecraft/server-net";
-import { channelID, botToken } from "./env.js";
+import { channelID, botToken, discordUserNameAPIurl } from "./env.js";
 import convertDieMessage from "./convertDieMessage.js";
 
 // ============================
@@ -43,15 +43,21 @@ world.afterEvents.worldLoad.subscribe(async () => {
 
 world.afterEvents.chatSend.subscribe(async (eventData) => {
   let player = eventData.sender.name;
+  let discordUserName = await getDiscordUserName(player);
   const message = {
-    content: `<${player}> ${eventData.message}`,
+    content: `<${discordUserName ? discordUserName : player}> ${
+      eventData.message
+    }`,
   };
   sendDiscordMessage(message);
 });
 
 world.afterEvents.playerJoin.subscribe(async (eventData) => {
   let player = eventData.playerName;
-  let title = `**🚪｜${player}がサーバーに参加しました**`;
+  let discordUserName = await getDiscordUserName(player);
+  let title = `**🚪｜${
+    discordUserName ? discordUserName : player
+  }がサーバーに参加しました**`;
   const embedData = {
     title: title,
     color: 0x87ceeb, // 空色
@@ -66,7 +72,10 @@ world.afterEvents.playerJoin.subscribe(async (eventData) => {
 
 world.afterEvents.playerLeave.subscribe(async (eventData) => {
   let player = eventData.playerName;
-  let title = `**👋｜${player}がサーバーから退出しました**`;
+  let discordUserName = await getDiscordUserName(player);
+  let title = `**👋｜${
+    discordUserName ? discordUserName : player
+  }がサーバーから退出しました**`;
   const embedData = {
     title: title,
     color: 0xffa500, // オレンジ色
@@ -83,16 +92,17 @@ world.afterEvents.playerEmote.subscribe(async (eventData) => {
   let player = eventData.player.nameTag;
   let playerLocation = eventData.player.location;
   let { x, y, z } = playerLocation;
-  let title = `**💃｜${player}が (${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(
+  let discordUserName = await getDiscordUserName(player);
+  let title = `**💃｜${
+    discordUserName ? discordUserName : player
+  }が (${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(
     2
   )}) でエモートを使いました！**`;
   const embedData = {
     title: title,
+    description: "※仕様上、エモート名は表示出来ません。",
     color: 0x00ff00, // 緑色
     timestamp: new Date().toISOString(),
-    footer: {
-      text: "エモート名は表示出来ません。",
-    },
   };
   const message = {
     content: "",
@@ -105,7 +115,8 @@ world.afterEvents.entityDie.subscribe(async (eventData) => {
   if (eventData.deadEntity.typeId == "minecraft:player") {
     let player = eventData.deadEntity.nameTag;
     let deadReason = await convertDieMessage(eventData.damageSource);
-    let title = `**💀｜${player}は${
+    let discordUserName = await getDiscordUserName(player);
+    let title = `**💀｜${discordUserName ? discordUserName : player}は${
       deadReason ? deadReason : "何らかの理由で死亡しました"
     }**`;
     const embedData = {
@@ -186,6 +197,21 @@ async function handleNewMessages() {
     lastMessageID = messages[0].id;
   }
   i++;
+}
+
+async function getDiscordUserName(mcBE_userName) {
+  try {
+    if (!discordUserNameAPIurl) return "";
+
+    const req = new HttpRequest(
+      `${discordUserNameAPIurl}/mcUsernameToDiscordUsername?mcUserId=${mcBE_userName}`
+    );
+    req.method = HttpRequestMethod.Get;
+    const response = await http.request(req);
+    return response.body;
+  } catch (err) {
+    return "";
+  }
 }
 
 system.runInterval(() => {
