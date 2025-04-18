@@ -14,10 +14,18 @@
 ※なお、ここで表記したtokenは既に無効化済みの物であるが、一般的にアクティブなtokenは絶対に公開してはいけない。
 ```js
 // ./scripts/env.js
-const botToken = "KQxRadknWn3hop3X0AgXIoL71.SP8axcS8CR9kbVJrbeKI9wsgqef";
-const channelID = "1344134143948230686";
 
-export { channelID, botToken };
+// Discord BOTのToken
+const botToken ="KQxRadknWn3hop3X0AgXIoL71.SP8axcS8CR9kbVJrbeKI9wsgqef";
+// 連携先Discord ChannelのChannel ID
+const channelID = "1344134143948230686";
+// Discord BOTのAPIポート
+// ※同一PCで両方のプログラムを起動する場合は設定を変えなくて大丈夫です。アドオンのみを利用する場合は「//」の位置を上下で入れ替えてください。
+// ※Discord BOTを利用しない場合にURLが入力されていても動作はしますが、各種処理をするたびに通信を試みるためdiscordへの転送に遅延が生じます。
+const discordUserNameAPIurl = "http://localhost:8000"; // Discord BOTも利用する場合はこの行のようにURLを指定する
+//const discordUserNameAPIurl = ""; // Discord BOTを利用しない場合はこの行のように空欄にする
+
+export { channelID, botToken, discordUserNameAPIurl };
 ```
 7. `manifest.json`と`scripts`フォルダを選択して、zip圧縮する。
 8. 圧縮すると恐らく`manifest.zip`になると思うので、`BEDiscord.mcpack`等と名前を変える。(拡張子を変える)
