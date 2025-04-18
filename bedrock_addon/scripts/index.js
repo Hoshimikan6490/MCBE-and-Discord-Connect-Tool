@@ -7,6 +7,11 @@ import {
 } from "@minecraft/server-net";
 import { channelID, botToken, discordUserNameAPIurl } from "./env.js";
 import convertDieMessage from "./convertDieMessage.js";
+import checkIfUserIsAdmin from "./checkDiscordPermission.js";
+
+// クールダウン管理用マップ（ユーザーID: 最終警告送信時刻）
+const nonAdminCooldown = new Map();
+const COOLDOWN_MS = 60 * 1000; // 1分
 
 // ============================
 // Discord メッセージ送信関数
@@ -148,7 +153,7 @@ async function handleNewMessages() {
   req.headers = [new HttpHeader("Authorization", `Bot ${botToken}`)];
   const response = await http.request(req);
   const messages = JSON.parse(response.body);
-  messages.forEach((message) => {
+  messages.forEach(async (message) => {
     if (!message.author.bot && i !== 0) {
       if (message.referenced_message) {
         let messageAuthor = message.referenced_message.author;
@@ -162,6 +167,31 @@ async function handleNewMessages() {
       } else {
         if (message.content.startsWith("runCommand!")) {
           try {
+            // Discordからのコマンドはサーバー管理者だけが使えるようにする
+            let isAdmin = await checkIfUserIsAdmin(
+              channelID,
+              message.author.id
+            );
+            if (!isAdmin) {
+              const now = Date.now();
+              const lastWarnTime = nonAdminCooldown.get(message.author.id) || 0;
+
+              // クールダウン中の場合は無視
+              if (now - lastWarnTime < COOLDOWN_MS) return;
+
+              // --- クールダウンマップから期限切れを削除 ---
+              for (const [userId, timestamp] of nonAdminCooldown.entries()) {
+                if (now - timestamp >= COOLDOWN_MS) {
+                  nonAdminCooldown.delete(userId);
+                }
+              }
+
+              nonAdminCooldown.set(message.author.id, now);
+              return sendDiscordMessage({
+                content: `<@${message.author.id}> あなたは、サーバー管理者権限を持っていないため、このコマンドは実行されません。`,
+              });
+            }
+
             const command = message.content.slice("runCommand!".length);
             if (command == "list") {
               const players = world.getAllPlayers();
