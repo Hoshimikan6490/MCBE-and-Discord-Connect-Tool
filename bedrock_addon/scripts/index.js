@@ -50,9 +50,7 @@ world.afterEvents.chatSend.subscribe(async (eventData) => {
   let player = eventData.sender.name;
   let discordUserName = await getDiscordUserName(player);
   const message = {
-    content: `<${discordUserName ? discordUserName : player}> ${
-      eventData.message
-    }`,
+    content: `<${discordUserName}> ${eventData.message}`,
   };
   sendDiscordMessage(message);
 });
@@ -60,9 +58,7 @@ world.afterEvents.chatSend.subscribe(async (eventData) => {
 world.afterEvents.playerJoin.subscribe(async (eventData) => {
   let player = eventData.playerName;
   let discordUserName = await getDiscordUserName(player);
-  let title = `**🚪｜${
-    discordUserName ? discordUserName : player
-  }がサーバーに参加しました**`;
+  let title = `**🚪｜${discordUserName}がサーバーに参加しました**`;
   const embedData = {
     title: title,
     color: 0x87ceeb, // 空色
@@ -78,9 +74,7 @@ world.afterEvents.playerJoin.subscribe(async (eventData) => {
 world.afterEvents.playerLeave.subscribe(async (eventData) => {
   let player = eventData.playerName;
   let discordUserName = await getDiscordUserName(player);
-  let title = `**👋｜${
-    discordUserName ? discordUserName : player
-  }がサーバーから退出しました**`;
+  let title = `**👋｜${discordUserName}がサーバーから退出しました**`;
   const embedData = {
     title: title,
     color: 0xffa500, // オレンジ色
@@ -98,11 +92,9 @@ world.afterEvents.playerEmote.subscribe(async (eventData) => {
   let playerLocation = eventData.player.location;
   let { x, y, z } = playerLocation;
   let discordUserName = await getDiscordUserName(player);
-  let title = `**💃｜${
-    discordUserName ? discordUserName : player
-  }が (${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(
+  let title = `**💃｜${discordUserName}が (${x.toFixed(2)}, ${y.toFixed(
     2
-  )}) でエモートを使いました！**`;
+  )}, ${z.toFixed(2)}) でエモートを使いました！**`;
   const embedData = {
     title: title,
     description: "※仕様上、エモート名は表示出来ません。",
@@ -121,7 +113,7 @@ world.afterEvents.entityDie.subscribe(async (eventData) => {
     let player = eventData.deadEntity.nameTag;
     let deadReason = await convertDieMessage(eventData.damageSource);
     let discordUserName = await getDiscordUserName(player);
-    let title = `**💀｜${discordUserName ? discordUserName : player}は${
+    let title = `**💀｜${discordUserName}は${
       deadReason ? deadReason : "何らかの理由で死亡しました"
     }**`;
     const embedData = {
@@ -238,9 +230,13 @@ async function getDiscordUserName(mcBE_userName) {
     );
     req.method = HttpRequestMethod.Get;
     const response = await http.request(req);
-    return response.body;
+
+    // 正常に処理が完了したら
+    if (response.status == 200) return response.body;
+    // 失敗したら
+    return mcBE_userName;
   } catch (err) {
-    return "";
+    return "Unknown User";
   }
 }
 
