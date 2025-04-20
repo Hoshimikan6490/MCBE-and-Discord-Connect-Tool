@@ -15,6 +15,7 @@ require("dotenv").config();
 //機密情報取得
 const discord_token = process.env.discord_token;
 const PORT = 8000 || process.env.PORT;
+const mcIPaddress = process.env.mcIPaddress;
 ///////////////////////////////////////////////////
 fs.readdir("./events", (_err, files) => {
   files.forEach((file) => {
@@ -64,6 +65,19 @@ app.get("/", (request, response) => {
 
 // userName取得API
 app.get("/mcUsernameToDiscordUsername", (request, response) => {
+  const clientIP = request.ip;
+
+  // マイクラサーバー以外からのリクエストは無視する
+  if (
+    !(
+      clientIP == "127.0.0.1" ||
+      clientIP == "::1" ||
+      clientIP.startsWith("::ffff:127.") ||
+      clientIP == mcIPaddress
+    )
+  )
+    return response.status(403).send("Access denied: IP not allowed.");
+
   let mcUserId = request.query.mcUserId;
   if (!mcUserId)
     return response.status(403).send("query parameter is required.");
@@ -78,7 +92,7 @@ app.get("/mcUsernameToDiscordUsername", (request, response) => {
     parsedDB[db[key].mcUserId] = db[key].discordUserName;
   });
 
-  return response?.send(parsedDB[mcUserId]);
+  return response?.status(200).send(parsedDB[mcUserId]);
 });
 
 app.listen(PORT, function () {
