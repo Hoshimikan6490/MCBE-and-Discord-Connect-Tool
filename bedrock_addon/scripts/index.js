@@ -233,10 +233,11 @@ async function getDiscordUserName(mcBE_userName) {
 
     // 正常に処理が完了したら
     if (response.status == 200) return response.body;
+    // 通信には成功しているが200じゃない場合は
+    return "Unknown User";
+  } catch (err) {
     // 失敗したら
     return mcBE_userName;
-  } catch (err) {
-    return "Unknown User";
   }
 }
 
