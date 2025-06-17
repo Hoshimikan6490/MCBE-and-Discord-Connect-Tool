@@ -188,7 +188,6 @@ async function handleNewMessages() {
             if (command == "list") {
               const players = world.getAllPlayers();
               const playerNames = players.map((p) => p.name).join(", ");
-              console.log(playerNames);
               sendDiscordMessage({
                 content: `計${players.length}人のプレイヤーが接続中！: ${playerNames}`,
               });
