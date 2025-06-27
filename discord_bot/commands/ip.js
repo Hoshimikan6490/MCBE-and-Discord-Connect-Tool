@@ -5,7 +5,7 @@ const {
   ActionRowBuilder,
   ButtonStyle,
 } = require("discord.js");
-require("dotenv").config();
+require("dotenv").config({ quiet: true });
 
 module.exports = {
   data: new SlashCommandBuilder()
