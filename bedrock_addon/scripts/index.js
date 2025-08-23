@@ -113,11 +113,16 @@ world.afterEvents.entityDie.subscribe(async (eventData) => {
 		let player = eventData.deadEntity.nameTag;
 		let deadReason = await convertDieMessage(eventData.damageSource);
 		let discordUserName = await getDiscordUserName(player);
+		let damagingEntityId = eventData.damageSource.damagingEntity?.typeId;
 		let title = `**💀｜${discordUserName}は${
 			deadReason ? deadReason : "何らかの理由で死亡しました"
 		}**`;
+		let description = deadReason
+			? ""
+			: `debug: \`${damagingEntityId}\` by \`${eventData.damageSource.cause}\``;
 		const embedData = {
 			title: title,
+			description: description,
 			color: 0x800080, // 紫色
 			timestamp: new Date().toISOString(),
 		};
