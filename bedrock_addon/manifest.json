@@ -4,7 +4,7 @@
 		"description": "Chat connection with a Bedrock Dedicated Server and Discord",
 		"name": "BEDiscord",
 		"uuid": "47f02ad1-720b-4953-bb80-0222fd4637e5",
-		"version": [1, 0, 4],
+		"version": [1, 0, 5],
 		"min_engine_version": [1, 21, 0]
 	},
 	"modules": [
