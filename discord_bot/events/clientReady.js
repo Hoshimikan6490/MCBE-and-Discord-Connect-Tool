@@ -4,8 +4,8 @@ const {
 	ActivityType,
 	PresenceUpdateStatus,
 	EmbedBuilder,
-} = require("discord.js");
-const mcpePing = require("mcpe-ping");
+} = require('discord.js');
+const mcpePing = require('mcpe-ping');
 const discord_token = process.env.discord_token;
 const IPaddress = process.env.mcIPaddress;
 const port = process.env.mcPort || 19132;
@@ -14,13 +14,13 @@ const readyChannelId = process.env.console_channel;
 
 module.exports = async (client) => {
 	//discord botへのコマンドの設定
-	const rest = new REST({ version: "10" }).setToken(discord_token);
+	const rest = new REST({ version: '10' }).setToken(discord_token);
 	(async () => {
 		try {
 			await rest.put(Routes.applicationCommands(client.user.id), {
 				body: await client.commands,
 			});
-			console.log("スラッシュコマンドの再読み込みに成功しました。");
+			console.log('スラッシュコマンドの再読み込みに成功しました。');
 		} catch (err) {
 			console.log(
 				`❌ スラッシュコマンドの再読み込み時にエラーが発生しました。：\n${err}`
@@ -36,14 +36,14 @@ module.exports = async (client) => {
 		mcpePing(IPaddress, port, (err, res) => {
 			if (err) {
 				client.user.setActivity({
-					name: "サーバーがオフラインです",
+					name: 'サーバーがオフラインです',
 					type: ActivityType.Competing,
 				});
 				client.user.setStatus(PresenceUpdateStatus.Idle);
 
 				if (oldStatus) {
 					let embed = new EmbedBuilder()
-						.setTitle("**⛔　サーバー停止**")
+						.setTitle('**⛔　サーバー停止**')
 						.setColor(0xff0000)
 						.setTimestamp();
 					client.channels.cache.get(downNotifyChannelId).send({
@@ -63,5 +63,5 @@ module.exports = async (client) => {
 		});
 	}, 10000);
 
-	client.channels.cache.get(readyChannelId).send("BOTを起動しました！");
+	client.channels.cache.get(readyChannelId).send('BOTを起動しました！');
 };

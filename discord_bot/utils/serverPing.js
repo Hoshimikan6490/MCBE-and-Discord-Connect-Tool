@@ -1,17 +1,17 @@
-const dgram = require("dgram");
-const mcpePing = require("mcpe-ping");
+const dgram = require('dgram');
+const mcpePing = require('mcpe-ping');
 
 // 未処理のエラーをキャッチしてプロセスが落ちるのを防ぐ
-process.on("uncaughtException", (error) => {
-	console.error("Uncaught Exception in serverPing:", error);
+process.on('uncaughtException', (error) => {
+	console.error('Uncaught Exception in serverPing:', error);
 	// プロセスを落とさずにエラーをログに記録
 });
 
-process.on("unhandledRejection", (reason, promise) => {
+process.on('unhandledRejection', (reason, promise) => {
 	console.error(
-		"Unhandled Rejection in serverPing at:",
+		'Unhandled Rejection in serverPing at:',
 		promise,
-		"reason:",
+		'reason:',
 		reason
 	);
 	// プロセスを落とさずにエラーをログに記録
@@ -23,7 +23,7 @@ process.on("unhandledRejection", (reason, promise) => {
 function basicUDPPing(host, port, timeout = 5000) {
 	return new Promise((resolve, reject) => {
 		let isResolved = false;
-		const client = dgram.createSocket("udp4");
+		const client = dgram.createSocket('udp4');
 		const startTime = Date.now();
 
 		// タイムアウト設定
@@ -35,11 +35,11 @@ function basicUDPPing(host, port, timeout = 5000) {
 				} catch (e) {
 					// ソケットが既に閉じられている場合のエラーを無視
 				}
-				reject(new Error("Connection timeout"));
+				reject(new Error('Connection timeout'));
 			}
 		}, timeout);
 
-		client.on("message", (msg, rinfo) => {
+		client.on('message', (msg, rinfo) => {
 			if (isResolved) return;
 
 			clearTimeout(timeoutId);
@@ -52,7 +52,7 @@ function basicUDPPing(host, port, timeout = 5000) {
 				responseTime,
 				host: rinfo.address,
 				port: rinfo.port,
-				message: "Server is responding",
+				message: 'Server is responding',
 				dataLength: msg.length,
 			});
 
@@ -63,7 +63,7 @@ function basicUDPPing(host, port, timeout = 5000) {
 			}
 		});
 
-		client.on("error", (err) => {
+		client.on('error', (err) => {
 			if (!isResolved) {
 				clearTimeout(timeoutId);
 				isResolved = true;
@@ -118,7 +118,7 @@ function safeMcpePing(host, port, timeout = 10000) {
 		const timeoutId = setTimeout(() => {
 			if (!isResolved) {
 				isResolved = true;
-				reject(new Error("mcpe-ping timeout"));
+				reject(new Error('mcpe-ping timeout'));
 			}
 		}, timeout);
 
@@ -131,10 +131,10 @@ function safeMcpePing(host, port, timeout = 10000) {
 
 				if (err) {
 					// ByteBufferエラーなどの特定のエラーをキャッチして安全に処理
-					if (err.message && err.message.includes("Illegal offset")) {
-						reject(new Error("Server response format error (ByteBuffer)"));
-					} else if (err.message && err.message.includes("RangeError")) {
-						reject(new Error("Server response parsing error"));
+					if (err.message && err.message.includes('Illegal offset')) {
+						reject(new Error('Server response format error (ByteBuffer)'));
+					} else if (err.message && err.message.includes('RangeError')) {
+						reject(new Error('Server response parsing error'));
 					} else {
 						reject(new Error(`mcpe-ping error: ${err.message}`));
 					}
@@ -143,7 +143,7 @@ function safeMcpePing(host, port, timeout = 10000) {
 
 				// レスポンスの妥当性をチェック
 				if (!res) {
-					reject(new Error("Empty response from server"));
+					reject(new Error('Empty response from server'));
 					return;
 				}
 
@@ -155,10 +155,10 @@ function safeMcpePing(host, port, timeout = 10000) {
 				isResolved = true;
 				// 予期しないエラーをキャッチ
 				if (
-					error.name === "RangeError" ||
-					error.message.includes("Illegal offset")
+					error.name === 'RangeError' ||
+					error.message.includes('Illegal offset')
 				) {
-					reject(new Error("Server response format error"));
+					reject(new Error('Server response format error'));
 				} else {
 					reject(new Error(`mcpe-ping unexpected error: ${error.message}`));
 				}
@@ -173,11 +173,11 @@ function safeMcpePing(host, port, timeout = 10000) {
 async function pingMinecraftServer(host, port = 19132) {
 	const methods = [
 		{
-			name: "mcpe-ping",
+			name: 'mcpe-ping',
 			func: () => safeMcpePing(host, port),
 		},
 		{
-			name: "basic-udp",
+			name: 'basic-udp',
 			func: () => basicUDPPing(host, port),
 		},
 	];
@@ -206,8 +206,8 @@ async function pingMinecraftServer(host, port = 19132) {
 
 			// クリティカルエラーの場合はログに記録
 			if (
-				error.message.includes("RangeError") ||
-				error.message.includes("ByteBuffer")
+				error.message.includes('RangeError') ||
+				error.message.includes('ByteBuffer')
 			) {
 				console.warn(
 					`Critical parsing error in ${method.name}:`,
@@ -236,7 +236,7 @@ async function safePingMinecraftServer(host, port = 19132) {
 		const result = await pingMinecraftServer(host, port);
 		return result;
 	} catch (error) {
-		console.error("Critical error in safePingMinecraftServer:", error);
+		console.error('Critical error in safePingMinecraftServer:', error);
 
 		// どんなエラーが発生してもプロセスを落とさない
 		return {

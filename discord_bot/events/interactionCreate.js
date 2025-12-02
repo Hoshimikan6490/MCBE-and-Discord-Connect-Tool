@@ -1,50 +1,50 @@
 const {
-  InteractionType,
-  ApplicationCommandType,
-  MessageFlags,
-} = require("discord.js");
-const fs = require("fs");
-const errorNotification = require("../errorNotification.js");
+	InteractionType,
+	ApplicationCommandType,
+	MessageFlags,
+} = require('discord.js');
+const fs = require('fs');
+const errorNotification = require('../errorNotification.js');
 
 module.exports = async (client, interaction) => {
-  try {
-    if (!interaction?.guild) {
-      return interaction?.reply({
-        content:
-          "❌ このBOTはサーバー内でのみ動作します。\nお手数をおかけしますが、サーバー内でご利用ください。",
-        flags: MessageFlags.Ephemeral,
-      });
-    } else {
-      if (interaction?.type == InteractionType.ApplicationCommand) {
-        fs.readdir("./commands", (err, files) => {
-          if (err) throw err;
-          files.forEach(async (f) => {
-            let props = require(`../commands/${f}`);
-            let propsJson = props.data.toJSON();
+	try {
+		if (!interaction?.guild) {
+			return interaction?.reply({
+				content:
+					'❌ このBOTはサーバー内でのみ動作します。\nお手数をおかけしますが、サーバー内でご利用ください。',
+				flags: MessageFlags.Ephemeral,
+			});
+		} else {
+			if (interaction?.type == InteractionType.ApplicationCommand) {
+				fs.readdir('./commands', (err, files) => {
+					if (err) throw err;
+					files.forEach(async (f) => {
+						let props = require(`../commands/${f}`);
+						let propsJson = props.data.toJSON();
 
-            //propsJsonがundefinedだった場合は、スラッシュコマンドとして、タイプを1にする
-            if (propsJson.type == undefined) {
-              propsJson.type = ApplicationCommandType.ChatInput;
-            }
+						//propsJsonがundefinedだった場合は、スラッシュコマンドとして、タイプを1にする
+						if (propsJson.type == undefined) {
+							propsJson.type = ApplicationCommandType.ChatInput;
+						}
 
-            if (
-              interaction.commandName == propsJson.name &&
-              interaction.commandType == propsJson.type
-            ) {
-              try {
-                return props.run(client, interaction);
-              } catch (err) {
-                return interaction?.reply({
-                  content: `❌ 何らかのエラーが発生しました。`,
-                  flags: MessageFlags.Ephemeral,
-                });
-              }
-            }
-          });
-        });
-      }
-    }
-  } catch (err) {
-    errorNotification(client, interaction, err);
-  }
+						if (
+							interaction.commandName == propsJson.name &&
+							interaction.commandType == propsJson.type
+						) {
+							try {
+								return props.run(client, interaction);
+							} catch (err) {
+								return interaction?.reply({
+									content: `❌ 何らかのエラーが発生しました。`,
+									flags: MessageFlags.Ephemeral,
+								});
+							}
+						}
+					});
+				});
+			}
+		}
+	} catch (err) {
+		errorNotification(client, interaction, err);
+	}
 };

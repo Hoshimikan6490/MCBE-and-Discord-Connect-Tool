@@ -1,20 +1,20 @@
 {
-  "name": "discord-bot",
-  "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
-  "main": "index.js",
-  "scripts": {
-    "main": "node index.js",
-    "mkToken": "node generateToken.js"
-  },
-  "dependencies": {
-    "discord.js": "^14.25.1",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "generate-password-lite": "^1.0.2",
-    "mcpe-ping": "^0.0.4"
-  }
+	"name": "discord-bot",
+	"version": "1.0.0",
+	"description": "",
+	"license": "ISC",
+	"author": "",
+	"type": "commonjs",
+	"main": "index.js",
+	"scripts": {
+		"main": "node index.js",
+		"mkToken": "node generateToken.js"
+	},
+	"dependencies": {
+		"discord.js": "^14.25.1",
+		"dotenv": "^17.2.3",
+		"express": "^5.1.0",
+		"generate-password-lite": "^1.0.2",
+		"mcpe-ping": "^0.0.4"
+	}
 }

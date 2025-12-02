@@ -1,13 +1,13 @@
-import { system, world } from "@minecraft/server";
+import { system, world } from '@minecraft/server';
 import {
 	HttpRequest,
 	HttpHeader,
 	http,
 	HttpRequestMethod,
-} from "@minecraft/server-net";
-import { channelID, botToken, discordUserNameAPIurl } from "./env.js";
-import convertDieMessage from "./convertDieMessage.js";
-import checkIfUserIsAdmin from "./checkDiscordPermission.js";
+} from '@minecraft/server-net';
+import { channelID, botToken, discordUserNameAPIurl } from './env.js';
+import convertDieMessage from './convertDieMessage.js';
+import checkIfUserIsAdmin from './checkDiscordPermission.js';
 
 // クールダウン管理用マップ（ユーザーID: 最終警告送信時刻）
 const nonAdminCooldown = new Map();
@@ -23,8 +23,8 @@ async function sendDiscordMessage(message) {
 	req.method = HttpRequestMethod.Post;
 	req.body = JSON.stringify(message);
 	req.headers = [
-		new HttpHeader("Content-Type", "application/json"),
-		new HttpHeader("Authorization", `Bot ${botToken}`),
+		new HttpHeader('Content-Type', 'application/json'),
+		new HttpHeader('Authorization', `Bot ${botToken}`),
 	];
 	await http.request(req);
 }
@@ -40,7 +40,7 @@ world.afterEvents.worldLoad.subscribe(async () => {
 		timestamp: new Date().toISOString(),
 	};
 	const message = {
-		content: "",
+		content: '',
 		embeds: [embedData],
 	};
 	sendDiscordMessage(message);
@@ -65,7 +65,7 @@ world.afterEvents.playerJoin.subscribe(async (eventData) => {
 		timestamp: new Date().toISOString(),
 	};
 	const message = {
-		content: "",
+		content: '',
 		embeds: [embedData],
 	};
 	sendDiscordMessage(message);
@@ -81,7 +81,7 @@ world.afterEvents.playerLeave.subscribe(async (eventData) => {
 		timestamp: new Date().toISOString(),
 	};
 	const message = {
-		content: "",
+		content: '',
 		embeds: [embedData],
 	};
 	sendDiscordMessage(message);
@@ -97,28 +97,28 @@ world.afterEvents.playerEmote.subscribe(async (eventData) => {
 	)}, ${z.toFixed(2)}) でエモートを使いました！**`;
 	const embedData = {
 		title: title,
-		description: "※仕様上、エモート名は表示出来ません。",
+		description: '※仕様上、エモート名は表示出来ません。',
 		color: 0x00ff00, // 緑色
 		timestamp: new Date().toISOString(),
 	};
 	const message = {
-		content: "",
+		content: '',
 		embeds: [embedData],
 	};
 	sendDiscordMessage(message);
 });
 
 world.afterEvents.entityDie.subscribe(async (eventData) => {
-	if (eventData.deadEntity.typeId == "minecraft:player") {
+	if (eventData.deadEntity.typeId == 'minecraft:player') {
 		let player = eventData.deadEntity.nameTag;
 		let deadReason = await convertDieMessage(eventData.damageSource);
 		let discordUserName = await getDiscordUserName(player);
 		let damagingEntityId = eventData.damageSource.damagingEntity?.typeId;
 		let title = `**💀｜${discordUserName}は${
-			deadReason ? deadReason : "何らかの理由で死亡しました"
+			deadReason ? deadReason : '何らかの理由で死亡しました'
 		}**`;
 		let description = deadReason
-			? ""
+			? ''
 			: `debug: \`${damagingEntityId}\` by \`${eventData.damageSource.cause}\``;
 		const embedData = {
 			title: title,
@@ -127,7 +127,7 @@ world.afterEvents.entityDie.subscribe(async (eventData) => {
 			timestamp: new Date().toISOString(),
 		};
 		const message = {
-			content: "",
+			content: '',
 			embeds: [embedData],
 		};
 		sendDiscordMessage(message);
@@ -147,7 +147,7 @@ async function handleNewMessages() {
 		: messageURL;
 	const req = new HttpRequest(url);
 	req.method = HttpRequestMethod.Get;
-	req.headers = [new HttpHeader("Authorization", `Bot ${botToken}`)];
+	req.headers = [new HttpHeader('Authorization', `Bot ${botToken}`)];
 	const response = await http.request(req);
 	const messages = JSON.parse(response.body);
 	messages.forEach(async (message) => {
@@ -162,7 +162,7 @@ async function handleNewMessages() {
 					}] §f${message.content}`
 				);
 			} else {
-				if (message.content.startsWith("runCommand!")) {
+				if (message.content.startsWith('runCommand!')) {
 					try {
 						// Discordからのコマンドはサーバー管理者だけが使えるようにする
 						let isAdmin = await checkIfUserIsAdmin(
@@ -189,15 +189,15 @@ async function handleNewMessages() {
 							});
 						}
 
-						const command = message.content.slice("runCommand!".length);
-						if (command == "list") {
+						const command = message.content.slice('runCommand!'.length);
+						if (command == 'list') {
 							const players = world.getAllPlayers();
-							const playerNames = players.map((p) => p.name).join(", ");
+							const playerNames = players.map((p) => p.name).join(', ');
 							sendDiscordMessage({
 								content: `計${players.length}人のプレイヤーが接続中！: ${playerNames}`,
 							});
 						} else {
-							world.getDimension("overworld").runCommand(command);
+							world.getDimension('overworld').runCommand(command);
 							// 結果をワールドに送信
 							sendDiscordMessage({
 								content: `success!!`,
@@ -227,7 +227,7 @@ async function handleNewMessages() {
 
 async function getDiscordUserName(mcBE_userName) {
 	try {
-		if (!discordUserNameAPIurl) return "";
+		if (!discordUserNameAPIurl) return '';
 
 		const req = new HttpRequest(
 			`${discordUserNameAPIurl}/mcUsernameToDiscordUsername?mcUserId=${mcBE_userName}`
@@ -238,7 +238,7 @@ async function getDiscordUserName(mcBE_userName) {
 		// 正常に処理が完了したら
 		if (response.status == 200) return response.body;
 		// 通信には成功しているが200じゃない場合は
-		return "Unknown User";
+		return 'Unknown User';
 	} catch (err) {
 		// 失敗したら
 		return mcBE_userName;
