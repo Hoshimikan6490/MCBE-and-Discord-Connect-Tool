@@ -203,7 +203,7 @@ export default async (damageSource) => {
 		if (damageSource.cause == 'ramAttack') return 'ヤギに突進されて力尽きた';
 
 		// killコマンドで死んだ場合
-		if (damageSource.cause == 'selfDestruct') return;
+		if (damageSource.cause == 'selfDestruct') return '死んだ';
 
 		// 衝撃波で死んだ場合
 		if (damageSource.cause == 'sonicBoom')
