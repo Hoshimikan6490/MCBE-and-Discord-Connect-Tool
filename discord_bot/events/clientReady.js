@@ -5,7 +5,7 @@ const {
 	PresenceUpdateStatus,
 	EmbedBuilder,
 } = require('discord.js');
-const mcpePing = require('mcpe-ping');
+const { safePingMinecraftServer } = require('../utils/serverPing');
 const discord_token = process.env.discord_token;
 const IPaddress = process.env.mcIPaddress;
 const port = process.env.mcPort || 19132;
@@ -32,9 +32,11 @@ module.exports = async (client) => {
 
 	//カスタマイズアクティビティを設定
 	let oldStatus;
-	setInterval(() => {
-		mcpePing(IPaddress, port, (err, res) => {
-			if (err) {
+	setInterval(async () => {
+		try {
+			const result = await safePingMinecraftServer(IPaddress, port);
+
+			if (!result.success) {
 				client.user.setActivity({
 					name: 'サーバーがオフラインです',
 					type: ActivityType.Competing,
@@ -54,13 +56,17 @@ module.exports = async (client) => {
 				return;
 			}
 
+			const res = result.data;
 			client.user.setActivity({
 				name: `${res.currentPlayers}/${res.maxPlayers}人がオンラインです。`,
 				type: ActivityType.Competing,
 			});
 			client.user.setStatus(PresenceUpdateStatus.Online);
 			oldStatus = true;
-		});
+		} catch (error) {
+			console.error('Error in status update interval:', error);
+			// エラーが発生してもプロセスを継続
+		}
 	}, 10000);
 
 	client.channels.cache.get(readyChannelId).send('BOTを起動しました！');
