@@ -18,7 +18,7 @@ const COOLDOWN_MS = 60 * 1000; // 1分
 // ============================
 async function sendDiscordMessage(message) {
 	const req = new HttpRequest(
-		`https://discord.com/api/v10/channels/${channelID}/messages`
+		`https://discord.com/api/v10/channels/${channelID}/messages`,
 	);
 	req.method = HttpRequestMethod.Post;
 	req.body = JSON.stringify(message);
@@ -93,7 +93,7 @@ world.afterEvents.playerEmote.subscribe(async (eventData) => {
 	let { x, y, z } = playerLocation;
 	let discordUserName = await getDiscordUserName(player);
 	let title = `**💃｜${discordUserName}が (${x.toFixed(2)}, ${y.toFixed(
-		2
+		2,
 	)}, ${z.toFixed(2)}) でエモートを使いました！**`;
 	const embedData = {
 		title: title,
@@ -149,7 +149,17 @@ async function handleNewMessages() {
 	req.method = HttpRequestMethod.Get;
 	req.headers = [new HttpHeader('Authorization', `Bot ${botToken}`)];
 	const response = await http.request(req);
+
+	// HTTPステータスコードをチェック
+	if (response.status === 401) {
+		console.warn(
+			`Discord API 認証エラー (401 Unauthorized)： Botトークンを確認してください。`,
+		);
+		return;
+	}
+
 	const messages = JSON.parse(response.body);
+
 	messages.forEach(async (message) => {
 		if (!message.author.bot && i !== 0) {
 			if (message.referenced_message) {
@@ -159,7 +169,7 @@ async function handleNewMessages() {
 						messageAuthor.global_name || messageAuthor.username
 					}] §f${message.referenced_message.content}\n§b[${
 						messageAuthor.global_name || messageAuthor.username
-					}] §f${message.content}`
+					}] §f${message.content}`,
 				);
 			} else {
 				if (message.content.startsWith('runCommand!')) {
@@ -167,7 +177,7 @@ async function handleNewMessages() {
 						// Discordからのコマンドはサーバー管理者だけが使えるようにする
 						let isAdmin = await checkIfUserIsAdmin(
 							channelID,
-							message.author.id
+							message.author.id,
 						);
 						if (!isAdmin) {
 							const now = Date.now();
@@ -212,7 +222,7 @@ async function handleNewMessages() {
 					world.sendMessage(
 						`§b[${message.author.global_name || message.author.username}] §f${
 							message.content
-						}`
+						}`,
 					);
 				}
 			}
@@ -230,7 +240,7 @@ async function getDiscordUserName(mcBE_userName) {
 		if (!discordUserNameAPIurl) return '';
 
 		const req = new HttpRequest(
-			`${discordUserNameAPIurl}/mcUsernameToDiscordUsername?mcUserId=${mcBE_userName}`
+			`${discordUserNameAPIurl}/mcUsernameToDiscordUsername?mcUserId=${mcBE_userName}`,
 		);
 		req.method = HttpRequestMethod.Get;
 		const response = await http.request(req);

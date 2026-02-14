@@ -23,20 +23,20 @@ export default async (channelID, userId) => {
 	try {
 		// サーバーIdの取得
 		const guildRes = await fetch(
-			`https://discord.com/api/v10/channels/${channelID}`
+			`https://discord.com/api/v10/channels/${channelID}`,
 		);
 		if (!guildRes) throw new Error('Guild fetch error');
 		const guildId = guildRes.guild_id;
 
 		// ユーザーの所属ロールID取得
 		const memberRes = await fetch(
-			`https://discord.com/api/v10/guilds/${guildId}/members/${userId}`
+			`https://discord.com/api/v10/guilds/${guildId}/members/${userId}`,
 		);
 		if (!memberRes) throw new Error('Member fetch error');
 
 		// サーバー内すべてのロール取得
 		const rolesRes = await fetch(
-			`https://discord.com/api/v10/guilds/${guildId}/roles`
+			`https://discord.com/api/v10/guilds/${guildId}/roles`,
 		);
 		if (!rolesRes) throw new Error('Roles fetch error');
 
