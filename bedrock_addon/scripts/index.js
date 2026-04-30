@@ -237,7 +237,7 @@ async function handleNewMessages() {
 
 async function getDiscordUserName(mcBE_userName) {
 	try {
-		if (!discordUserNameAPIurl) return '';
+		if (!discordUserNameAPIurl) return mcBE_userName;
 
 		const req = new HttpRequest(
 			`${discordUserNameAPIurl}/mcUsernameToDiscordUsername?mcUserId=${mcBE_userName}`,
