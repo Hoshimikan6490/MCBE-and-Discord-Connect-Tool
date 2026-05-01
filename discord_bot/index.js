@@ -72,6 +72,10 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 			? clientIPRaw.replace('::ffff:', '')
 			: clientIPRaw;
 
+	console.log(
+		`[API Request] IP: ${clientIPRaw} -> ${clientIP}, mcIPaddress: ${mcIPaddress}`,
+	);
+
 	// マイクラサーバー以外からのリクエストは無視する
 	if (
 		!(
@@ -79,12 +83,16 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 			clientIP === '::1' ||
 			clientIP === mcIPaddress
 		)
-	)
+	) {
+		console.log(`[API] IP check failed`);
 		return response.status(403).send('Access denied: IP not allowed.');
+	}
 
 	let mcUserId = request.query.mcUserId;
+	console.log(`[API] mcUserId query param: ${mcUserId}`);
+
 	if (!mcUserId)
-		return response.status(403).send('query parameter is required.');
+		return response.status(400).send('query parameter is required.');
 
 	let db = fs.readFileSync('./mcIDtoDiscordUserName.json');
 	db = JSON.parse(db);
@@ -96,7 +104,16 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 		parsedDB[db[key].mcUserId] = db[key].discordUserName;
 	});
 
-	return response?.status(200).send(parsedDB[mcUserId]);
+	console.log(`[API] parsedDB:`, parsedDB);
+	const discordUserName = parsedDB[mcUserId];
+	console.log(`[API] Result for mcUserId "${mcUserId}": "${discordUserName}"`);
+
+	if (discordUserName === undefined) {
+		console.log(`[API] User not found in DB`);
+		return response.status(200).send('');
+	}
+
+	return response.status(200).send(discordUserName);
 });
 
 app.listen(PORT, function () {
