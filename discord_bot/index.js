@@ -48,13 +48,13 @@ fs.readdir('./commands', (err, files) => {
 if (discord_token) {
 	client.login(discord_token).catch((err) => {
 		console.log(
-			'プロジェクトに入力したボットのトークンが間違っているか、ボットのINTENTSがオフになっています!'
+			'プロジェクトに入力したボットのトークンが間違っているか、ボットのINTENTSがオフになっています!',
 		);
 	});
 } else {
 	setTimeout(() => {
 		console.log(
-			'ボットのトークンをプロジェクト内の.envファイルに設定してください!'
+			'ボットのトークンをプロジェクト内の.envファイルに設定してください!',
 		);
 	}, 2000);
 }
@@ -65,15 +65,19 @@ app.get('/', (request, response) => {
 
 // userName取得API
 app.get('/mcUsernameToDiscordUsername', (request, response) => {
-	const clientIP = request.ip;
+	const clientIPRaw = request.ip;
+	// IPv4 が IPv6 マッピングで渡される場合があるので正規化する
+	const clientIP =
+		clientIPRaw && clientIPRaw.startsWith('::ffff:')
+			? clientIPRaw.replace('::ffff:', '')
+			: clientIPRaw;
 
 	// マイクラサーバー以外からのリクエストは無視する
 	if (
 		!(
-			clientIP == '127.0.0.1' ||
-			clientIP == '::1' ||
-			clientIP.startsWith('::ffff:127.') ||
-			clientIP == mcIPaddress
+			clientIP === '127.0.0.1' ||
+			clientIP === '::1' ||
+			clientIP === mcIPaddress
 		)
 	)
 		return response.status(403).send('Access denied: IP not allowed.');
