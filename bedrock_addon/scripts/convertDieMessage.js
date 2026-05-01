@@ -80,6 +80,9 @@ export default async (damageSource) => {
 		// ゾグリンに殺された場合
 		if (damageSource.damagingEntity?.typeId == 'minecraft:zoglin')
 			return 'ゾグリンに殺害された';
+		// ピグリンに殺された場合
+		if (damageSource.damagingEntity?.typeId == 'minecraft:piglin')
+			return 'ピグリンに殺害された';
 		// ピグリンブルートに殺された場合
 		if (damageSource.damagingEntity?.typeId == 'minecraft:piglin_brute')
 			return 'ピグリンブルートに殺害された';
