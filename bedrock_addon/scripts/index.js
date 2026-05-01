@@ -158,7 +158,22 @@ async function handleNewMessages() {
 		return;
 	}
 
-	const messages = JSON.parse(response.body);
+	let messages;
+	try {
+		messages = JSON.parse(response.body);
+	} catch (err) {
+		console.warn(
+			`Discord API から JSON 以外の応答を受信しました。status=${response.status}, body=${response.body}`,
+		);
+		return;
+	}
+
+	if (!Array.isArray(messages)) {
+		console.warn(
+			`Discord API の応答形式が想定外です。status=${response.status}, body=${response.body}`,
+		);
+		return;
+	}
 
 	messages.forEach(async (message) => {
 		if (!message.author.bot && i !== 0) {
