@@ -262,6 +262,13 @@ async function getDiscordUserName(mcBE_userName) {
 
 		// 正常に処理が完了したら
 		if (response.status == 200) return response.body;
+		// 403の時
+		if (response.status == 403) {
+			console.warn(
+				`Discord BOT API へのアクセスが拒否されました (403 Forbidden)。マイクラサーバーからのリクエストが許可されているIPアドレスから送信されているか確認してください。status=${response.status}, body=${response.body}`,
+			);
+			return 'Unknown User';
+		}
 		// 通信には成功しているが200じゃない場合は
 		return 'Unknown User';
 	} catch (err) {
