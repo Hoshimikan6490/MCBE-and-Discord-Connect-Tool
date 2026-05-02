@@ -78,8 +78,9 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 		`[API Request] IP: ${clientIPRaw} -> ${clientIP}, allowedIPs: ${JSON.stringify(mcAllowedIPs)}`,
 	);
 
-	// マイクラサーバー以外からのリクエストは無視する
+	// allowedIPsが設定されている場合のみIPをチェック。空の場合は全IP許可
 	if (
+		mcAllowedIPs.length > 0 &&
 		!(
 			clientIP === '127.0.0.1' ||
 			clientIP === '::1' ||
