@@ -10,6 +10,8 @@ const client = new Client({
 });
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const userModel = require('./models/userSchema');
 require('dotenv').config({ quiet: true });
 
 //機密情報取得
@@ -18,6 +20,8 @@ const PORT = 8000 || process.env.PORT;
 const mcAllowedIPs = process.env.allowedIPs
 	? JSON.parse(process.env.allowedIPs)
 	: [];
+const mongoDBConnectionString = process.env.mongoDBConnectionString;
+
 ///////////////////////////////////////////////////
 fs.readdir('./events', (_err, files) => {
 	files.forEach((file) => {
@@ -47,6 +51,24 @@ fs.readdir('./commands', (err, files) => {
 	});
 });
 
+if (mongoDBConnectionString) {
+	//mongooseについて
+	mongoose
+		.connect(mongoDBConnectionString, { dbName: 'users' })
+		.then(() => {
+			console.log('[DB] データベースに接続しました');
+		})
+		.catch((err) => {
+			throw err;
+		});
+} else {
+	setTimeout(() => {
+		console.log(
+			'mongodbの接続情報をプロジェクト内の.envファイルに設定してください!',
+		);
+	}, 2000);
+}
+
 if (discord_token) {
 	client.login(discord_token).catch((err) => {
 		console.log(
@@ -66,7 +88,7 @@ app.get('/', (request, response) => {
 });
 
 // userName取得API
-app.get('/mcUsernameToDiscordUsername', (request, response) => {
+app.get('/mcUsernameToDiscordUsername', async (request, response) => {
 	let clientIPRaw =
 		request.headers['x-forwarded-for'] || request.connection.remoteAddress;
 	if (!clientIPRaw) clientIPRaw = request.ip || null;
@@ -93,20 +115,11 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 	if (!mcUserId)
 		return response.status(400).send('query parameter is required.');
 
-	let db = fs.readFileSync('./mcIDtoDiscordUserName.json');
-	db = JSON.parse(db);
-
-	let parsedDB = {};
-
-	// dbの内容を統合版マインクラフトのユーザー名とdiscordのユーザー名が対応するようにフォーマット
-	Object.keys(db).forEach((key) => {
-		parsedDB[db[key].mcUserId] = db[key].discordUserName;
-	});
-
-	const discordUserName = parsedDB[mcUserId];
+	let matchedUser = await userModel.findOne({ mcUserId }).lean();
+	const discordUserName = matchedUser?.discordUserName;
 
 	if (discordUserName === undefined) {
-		return response.status(200).send('');
+		return response.status(200).send(mcUserId);
 	}
 
 	return response.status(200).send(discordUserName);

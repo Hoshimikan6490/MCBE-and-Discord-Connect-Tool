@@ -15,6 +15,7 @@
 		"dotenv": "^17.4.2",
 		"express": "^5.2.1",
 		"generate-password-lite": "^1.0.2",
-		"mcpe-ping": "^0.0.4"
+		"mcpe-ping": "^0.0.4",
+		"mongoose": "^9.6.1"
 	}
 }

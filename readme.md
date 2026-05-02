@@ -6,10 +6,7 @@
 - 本ツールは、ローカルホストの中でMinecraft Bedrock Editionのサーバーと、Discord BOTをホストする想定で設計されています。そのため、アドオンとDiscord BOTの通信は非暗号化状態であるhttpプロトコルを用いています。よって、別ホストで起動するなど、Discord BOTが外部からアクセスできる状態にする場合は、VPNなどの適切なセキュリティ対策をするか、このリポジトリをフォークして、httpsに対応した物に改造することを強くおすすめします。
 - 使用例のスクリーンショットは、アドオンとdiscord botの両方を使用した場合の表示です。それらの機能については、「アドオンとdiscord botの機能について」をご覧ください。
 - 本アドオンは、「beta API」(旧GameTest API)を使用するため、実績解除が出来なくなります。予めご了承ください。
-- コントリビュートする場合は、次のコマンドを実行して「mcIDtoDiscordUserName.json」の変更をignoreしてください。
-```console
-git update-index --skip-worktree .\discord_bot\mcIDtoDiscordUserName.json
-```
+- Discord BOTのユーザー名対応表はMongoDBに保存されます。利用する場合は、`discord_bot/.env` に `mongoDBConnectionString` を設定してください。
 
 ## 各種制限
 - Discordにおける送信文字数などの上限は、Discordの仕様の通りです。
