@@ -15,7 +15,9 @@ require('dotenv').config({ quiet: true });
 //機密情報取得
 const discord_token = process.env.discord_token;
 const PORT = 8000 || process.env.PORT;
-const mcIPaddress = process.env.mcIPaddress;
+const mcAllowedIPs = process.env.allowedIPs
+	? JSON.parse(process.env.allowedIPs)
+	: [];
 ///////////////////////////////////////////////////
 fs.readdir('./events', (_err, files) => {
 	files.forEach((file) => {
@@ -73,7 +75,7 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 			: clientIPRaw;
 
 	console.log(
-		`[API Request] IP: ${clientIPRaw} -> ${clientIP}, mcIPaddress: ${mcIPaddress}`,
+		`[API Request] IP: ${clientIPRaw} -> ${clientIP}, allowedIPs: ${JSON.stringify(mcAllowedIPs)}`,
 	);
 
 	// マイクラサーバー以外からのリクエストは無視する
@@ -81,7 +83,7 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 		!(
 			clientIP === '127.0.0.1' ||
 			clientIP === '::1' ||
-			clientIP === mcIPaddress
+			mcAllowedIPs.includes(clientIP)
 		)
 	) {
 		console.log(`[API] IP check failed`);
