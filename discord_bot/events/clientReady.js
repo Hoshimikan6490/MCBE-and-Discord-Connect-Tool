@@ -9,8 +9,9 @@ const { safePingMinecraftServer } = require('../utils/serverPing');
 const discord_token = process.env.discord_token;
 const IPaddress = process.env.mcIPaddress;
 const port = process.env.mcPort || 19132;
-const downNotifyChannelId = process.env.mcDownNotificationChannel;
-const readyChannelId = process.env.console_channel;
+let downNotifyChannelId = process.env.mcDownNotificationChannel;
+let consoleChannelId = process.env.console_channel;
+if (!downNotifyChannelId) downNotifyChannelId = consoleChannelId;
 
 module.exports = async (client) => {
 	//discord botへのコマンドの設定
@@ -23,7 +24,7 @@ module.exports = async (client) => {
 			console.log('スラッシュコマンドの再読み込みに成功しました。');
 		} catch (err) {
 			console.log(
-				`❌ スラッシュコマンドの再読み込み時にエラーが発生しました。：\n${err}`
+				`❌ スラッシュコマンドの再読み込み時にエラーが発生しました。：\n${err}`,
 			);
 		}
 	})();
@@ -69,5 +70,5 @@ module.exports = async (client) => {
 		}
 	}, 10000);
 
-	client.channels.cache.get(readyChannelId).send('BOTを起動しました！');
+	client.channels.cache.get(consoleChannelId).send('BOTを起動しました！');
 };
