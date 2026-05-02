@@ -76,10 +76,6 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 			? clientIPRaw.replace('::ffff:', '')
 			: clientIPRaw;
 
-	console.log(
-		`[API Request] IP: ${clientIPRaw} -> ${clientIP}, allowedIPs: ${JSON.stringify(mcAllowedIPs)}`,
-	);
-
 	// allowedIPsが設定されている場合のみIPをチェック。空の場合は全IP許可
 	if (
 		mcAllowedIPs.length > 0 &&
@@ -89,12 +85,10 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 			mcAllowedIPs.includes(clientIP)
 		)
 	) {
-		console.log(`[API] IP check failed`);
 		return response.status(403).send('Access denied: IP not allowed.');
 	}
 
 	let mcUserId = request.query.mcUserId;
-	console.log(`[API] mcUserId query param: ${mcUserId}`);
 
 	if (!mcUserId)
 		return response.status(400).send('query parameter is required.');
@@ -109,12 +103,9 @@ app.get('/mcUsernameToDiscordUsername', (request, response) => {
 		parsedDB[db[key].mcUserId] = db[key].discordUserName;
 	});
 
-	console.log(`[API] parsedDB:`, parsedDB);
 	const discordUserName = parsedDB[mcUserId];
-	console.log(`[API] Result for mcUserId "${mcUserId}": "${discordUserName}"`);
 
 	if (discordUserName === undefined) {
-		console.log(`[API] User not found in DB`);
 		return response.status(200).send('');
 	}
 
