@@ -67,7 +67,9 @@ app.get('/', (request, response) => {
 
 // userName取得API
 app.get('/mcUsernameToDiscordUsername', (request, response) => {
-	const clientIPRaw = request.ip;
+	let clientIPRaw =
+		request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+	if (!clientIPRaw) clientIPRaw = request.ip || null;
 	// IPv4 が IPv6 マッピングで渡される場合があるので正規化する
 	const clientIP =
 		clientIPRaw && clientIPRaw.startsWith('::ffff:')
