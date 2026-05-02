@@ -81,7 +81,7 @@ module.exports = {
 						mcUserId: mcUserId,
 						discordUserName: discordUserName,
 					},
-					{ upsert: true, new: true },
+					{ upsert: true, returnDocument: 'after' },
 				);
 
 				// 登録済みか確認して未登録なら登録(またはアップデート)と表記
