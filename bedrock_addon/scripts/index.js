@@ -13,6 +13,7 @@ import checkIfUserIsAdmin from './checkDiscordPermission.js';
 const nonAdminCooldown = new Map();
 const COOLDOWN_MS = 60 * 1000; // 1分
 let nextMessageFetchAt = 0;
+const MIN_RETRY_AFTER_SECONDS = 2; // 最低でもこの秒数は待つ
 
 function getDiscordRetryAfterSeconds(body) {
 	try {
@@ -184,9 +185,10 @@ async function handleNewMessages() {
 	if (response.status === 429) {
 		const retryAfter = getDiscordRetryAfterSeconds(response.body);
 		if (retryAfter > 0) {
-			nextMessageFetchAt = Date.now() + retryAfter * 1000;
+			const wait = Math.max(retryAfter, MIN_RETRY_AFTER_SECONDS);
+			nextMessageFetchAt = Date.now() + wait * 1000;
 			console.warn(
-				`Discord API の取得がレート制限されました。retry_after=${retryAfter}`,
+				`Discord API の取得がレート制限されました。retry_after=${retryAfter} (適用=${wait}s)`,
 			);
 		}
 		return;
