@@ -8,7 +8,7 @@ const {
 const { safePingMinecraftServer } = require('../utils/serverPing');
 const discord_token = process.env.discord_token;
 const IPaddress = process.env.mcIPaddress;
-const port = process.env.mcPort || 19132;
+const port = parseInt(process.env.mcPort) || 19132; // デフォルトのポート番号
 let downNotifyChannelId = process.env.mcDownNotificationChannel;
 let consoleChannelId = process.env.console_channel;
 if (!downNotifyChannelId) downNotifyChannelId = consoleChannelId;
