@@ -12,6 +12,17 @@ import checkIfUserIsAdmin from './checkDiscordPermission.js';
 // クールダウン管理用マップ（ユーザーID: 最終警告送信時刻）
 const nonAdminCooldown = new Map();
 const COOLDOWN_MS = 60 * 1000; // 1分
+let nextMessageFetchAt = 0;
+
+function getDiscordRetryAfterSeconds(body) {
+	try {
+		const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+		const retryAfter = Number(parsedBody?.retry_after);
+		return Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : 0;
+	} catch {
+		return 0;
+	}
+}
 
 // ============================
 // Discord メッセージ送信関数
@@ -26,7 +37,15 @@ async function sendDiscordMessage(message) {
 		new HttpHeader('Content-Type', 'application/json'),
 		new HttpHeader('Authorization', `Bot ${botToken}`),
 	];
-	await http.request(req);
+	const response = await http.request(req);
+	if (response.status === 429) {
+		const retryAfter = getDiscordRetryAfterSeconds(response.body);
+		if (retryAfter > 0) {
+			console.warn(
+				`Discord API の送信がレート制限されました。retry_after=${retryAfter}`,
+			);
+		}
+	}
 }
 
 // ============================
@@ -143,6 +162,9 @@ let lastMessageID = null;
 let i = 0;
 
 async function handleNewMessages() {
+	const now = Date.now();
+	if (now < nextMessageFetchAt) return;
+
 	const url = lastMessageID
 		? `${messageURL}?after=${lastMessageID}`
 		: messageURL;
@@ -156,6 +178,17 @@ async function handleNewMessages() {
 		console.warn(
 			`Discord API 認証エラー (401 Unauthorized)： Botトークンを確認してください。`,
 		);
+		return;
+	}
+
+	if (response.status === 429) {
+		const retryAfter = getDiscordRetryAfterSeconds(response.body);
+		if (retryAfter > 0) {
+			nextMessageFetchAt = Date.now() + retryAfter * 1000;
+			console.warn(
+				`Discord API の取得がレート制限されました。retry_after=${retryAfter}`,
+			);
+		}
 		return;
 	}
 
