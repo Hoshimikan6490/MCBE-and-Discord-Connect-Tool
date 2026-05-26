@@ -42,6 +42,7 @@ world.afterEvents.worldLoad.subscribe(async () => {
 	const message = {
 		content: '',
 		embeds: [embedData],
+		flags: [4096], // サイレントメッセージで送信する
 	};
 	sendDiscordMessage(message);
 });
