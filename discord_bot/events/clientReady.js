@@ -4,6 +4,7 @@ const {
 	ActivityType,
 	PresenceUpdateStatus,
 	EmbedBuilder,
+	MessageFlags,
 } = require('discord.js');
 const { safePingMinecraftServer } = require('../utils/serverPing');
 const discord_token = process.env.discord_token;
@@ -51,6 +52,7 @@ module.exports = async (client) => {
 						.setTimestamp();
 					client.channels.cache.get(downNotifyChannelId).send({
 						embeds: [embed],
+						flags: MessageFlags.SuppressNotifications,
 					});
 					oldStatus = false;
 				}
