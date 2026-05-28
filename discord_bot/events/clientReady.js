@@ -34,18 +34,20 @@ module.exports = async (client) => {
 
 	//カスタマイズアクティビティを設定
 	let oldStatus;
+	let consecutiveFailures = 0;
 	setInterval(async () => {
 		try {
 			const result = await safePingMinecraftServer(IPaddress, port);
 
 			if (!result.success) {
+				consecutiveFailures += 1;
 				client.user.setActivity({
 					name: 'サーバーがオフラインです',
 					type: ActivityType.Competing,
 				});
 				client.user.setStatus(PresenceUpdateStatus.Idle);
 
-				if (oldStatus) {
+				if (oldStatus && consecutiveFailures >= 3) {
 					let embed = new EmbedBuilder()
 						.setTitle('**⛔　サーバー停止**')
 						.setColor(0xff0000)
@@ -59,6 +61,7 @@ module.exports = async (client) => {
 				return;
 			}
 
+			consecutiveFailures = 0;
 			const res = result.data;
 			client.user.setActivity({
 				name: `${res.currentPlayers}/${res.maxPlayers}人がオンラインです。`,
