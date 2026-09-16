@@ -16,6 +16,6 @@
 		"express": "^5.2.1",
 		"generate-password-lite": "^1.1.1",
 		"mcpe-ping": "^0.0.4",
-		"mongoose": "^9.9.4"
+		"mongoose": "^9.10.1"
 	}
 }
