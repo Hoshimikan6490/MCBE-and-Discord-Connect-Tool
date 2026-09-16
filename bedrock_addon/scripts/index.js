@@ -47,6 +47,11 @@ async function sendDiscordMessage(message) {
 			);
 		}
 	}
+	if (response.status < 200 && response.status >= 300) {
+		console.warn(
+			`Discord API への送信が失敗しました。status=${response.status}, body=${response.body}`,
+		);
+	}
 }
 
 // ============================
