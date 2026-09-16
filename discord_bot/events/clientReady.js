@@ -49,7 +49,7 @@ module.exports = async (client) => {
 
 				if (oldStatus && consecutiveFailures >= 3) {
 					let embed = new EmbedBuilder()
-						.setTitle('**⛔　サーバー停止**')
+						.setTitle('**⚠️ Ping要求にサーバーが応答しませんでした**')
 						.setColor(0xff0000)
 						.setTimestamp();
 					client.channels.cache.get(downNotifyChannelId).send({

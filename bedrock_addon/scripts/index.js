@@ -72,6 +72,22 @@ world.afterEvents.worldLoad.subscribe(async () => {
 	sendDiscordMessage(message);
 });
 
+system.beforeEvents.shutdown.subscribe((event) => {
+	const title = `**🛑｜サーバー停止**`;
+	const embedData = {
+		title: title,
+		description: 'サーバーが正常に停止しました。',
+		color: 0xff0000,
+		timestamp: new Date().toISOString(),
+	};
+	const message = {
+		content: '',
+		embeds: [embedData],
+		flags: 4096, // サイレントメッセージで送信する
+	};
+	sendDiscordMessage(message);
+});
+
 world.afterEvents.chatSend.subscribe(async (eventData) => {
 	let player = eventData.sender.name;
 	let discordUserName = await getDiscordUserName(player);
