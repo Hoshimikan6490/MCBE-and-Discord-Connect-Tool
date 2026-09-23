@@ -119,6 +119,9 @@ export default async (damageSource) => {
 		// クリーキングに殺された場合
 		if (damageSource.damagingEntity?.typeId == 'minecraft:creaking')
 			return 'クリーキングに殺害された';
+		// ラヴェジャーに殺された場合
+		if (damageSource.damagingEntity?.typeId == 'minecraft:ravager')
+			return 'ラヴェジャーに殺害された';
 	}
 
 	// エンティティの爆発で死んだ場合
@@ -276,6 +279,13 @@ export default async (damageSource) => {
 			damageSource.damagingEntity?.typeId == 'minecraft:wind_charge_projectile'
 		)
 			return 'ウィンドチャージに殺害され';
+		// ガストの火球で死んだ場合
+		if (damageSource.damagingEntity?.typeId == 'minecraft:ghast')
+			return 'ガストに殺害された';
+		// dev用情報を残す
+		console.log(
+			`[BEDiscord] ${damageSource.damagingEntity?.typeId}からの飛来物によってプレイヤーが死亡しましたが、死亡メッセージが未対応です。このメッセージを開発者に報告してください。`,
+		);
 		return '飛翔物に殺害された';
 	}
 
